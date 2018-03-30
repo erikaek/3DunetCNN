@@ -20,7 +20,7 @@ RUN git clone https://github.com/stnava/ANTs.git && \
     cd /ants && \
     cmake /code/ANTs && \
     make -j 4 && \
-    export PYTHONPATH=${/home/eriek/workspace/3DUnetCNN/}:$PYTHONPATH
+    export PYTHONPATH=${/home/eriek/workspace/3DunetCNN/}:$PYTHONPATH
 
 
 ENV ANTSPATH=/ants/bin
