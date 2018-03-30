@@ -5,7 +5,7 @@ from keras.engine import Model
 from keras.optimizers import Adam
 
 from .unet import create_convolution_block, concatenate
-from ..metrics import weighted_dice_coefficient_loss
+from ..metrics import weighted_dice_coefficient_loss, weighted_dice_coefficient
 
 
 create_convolution_block = partial(create_convolution_block, activation=LeakyReLU, instance_normalization=True)
@@ -13,7 +13,7 @@ create_convolution_block = partial(create_convolution_block, activation=LeakyReL
 
 def isensee2017_model(input_shape=(4, 128, 128, 128), n_base_filters=16, depth=5, dropout_rate=0.3,
                       n_segmentation_levels=3, n_labels=4, optimizer=Adam, initial_learning_rate=5e-4,
-                      loss_function=weighted_dice_coefficient_loss, activation_name="sigmoid"):
+                      loss_function=weighted_dice_coefficient_loss, activation_name="sigmoid", metrics = weighted_dice_coefficient):
     """
     This function builds a model proposed by Isensee et al. for the BRATS 2017 competition:
     https://www.cbica.upenn.edu/sbia/Spyridon.Bakas/MICCAI_BraTS/MICCAI_BraTS_2017_proceedings_shortPapers.pdf
@@ -77,7 +77,7 @@ def isensee2017_model(input_shape=(4, 128, 128, 128), n_base_filters=16, depth=5
     activation_block = Activation(activation_name)(output_layer)
 
     model = Model(inputs=inputs, outputs=activation_block)
-    model.compile(optimizer=optimizer(lr=initial_learning_rate), loss=loss_function)
+    model.compile(optimizer=optimizer(lr=initial_learning_rate), loss=loss_function,  metrics=metrics)
     return model
 
 
