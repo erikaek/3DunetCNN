@@ -4,8 +4,7 @@ COPY requirements.txt .
 
 RUN pip --no-cache-dir install --upgrade pip && \
     pip --no-cache-dir install -r requirements.txt && \
-    pip --no-cache-dir install nipype SimpleITK && \
-    pip --no-cache-dir install git+https://www.github.com/farizrahman4u/keras-contrib.git
+    pip --no-cache-dir install nipype SimpleITK
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
       cmake \
@@ -13,6 +12,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
       && \
    apt-get clean && \
    rm -rf /var/lib/apt/lists/*
+
+RUN pip --no-cache-dir install git+https://www.github.com/farizrahman4u/keras-contrib.git
 
 WORKDIR /code
 RUN git clone https://github.com/stnava/ANTs.git && \
