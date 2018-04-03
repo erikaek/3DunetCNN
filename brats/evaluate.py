@@ -42,7 +42,6 @@ def main():
     scores = dict()
     for index, score in enumerate(df.columns):
         values = df.values.T[index]
-        print(values)
         scores[score] = values[np.isnan(values) == False]
 
     plt.boxplot(list(scores.values()), labels=list(scores.keys()))
@@ -50,7 +49,7 @@ def main():
     plt.savefig("validation_scores_boxplot.png")
     plt.close()
 
-    training_df = pd.read_csv("./training.log").set_index('epoch')
+    training_df = pd.read_csv("./brats/isensee2017/training.log").set_index('epoch')
 
     plt.plot(training_df['loss'].values, label='training loss')
     plt.plot(training_df['val_loss'].values, label='validation loss')
