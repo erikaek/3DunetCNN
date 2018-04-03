@@ -1,6 +1,6 @@
 import os
 
-from train import config
+from train_isensee2017 import config
 from unet3d.prediction import run_validation_cases
 
 
