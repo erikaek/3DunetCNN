@@ -42,6 +42,7 @@ def main():
     scores = dict()
     for index, score in enumerate(df.columns):
         values = df.values.T[index]
+        print(values)
         scores[score] = values[np.isnan(values) == False]
 
     plt.boxplot(list(scores.values()), labels=list(scores.keys()))
