@@ -28,7 +28,7 @@ def main():
     header = ("WholeTumor", "TumorCore", "EnhancingTumor")
     masking_functions = (get_whole_tumor_mask, get_tumor_core_mask, get_enhancing_tumor_mask)
     rows = list()
-    for case_folder in glob.glob("prediction*"):
+    for case_folder in glob.glob("prediction/*/"):
         truth_file = os.path.join(case_folder, "truth.nii.gz")
         truth_image = nib.load(truth_file)
         truth = truth_image.get_data()
