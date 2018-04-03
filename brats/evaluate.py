@@ -24,11 +24,12 @@ def dice_coefficient(truth, prediction):
     return 2 * np.sum(truth * prediction)/(np.sum(truth) + np.sum(prediction))
 
 
-def main():
+def main(args):
     header = ("WholeTumor", "TumorCore", "EnhancingTumor")
     masking_functions = (get_whole_tumor_mask, get_tumor_core_mask, get_enhancing_tumor_mask)
     rows = list()
-    for case_folder in glob.glob("prediction/*/"):
+    prediction_path = "./prediction/"+args.mode.lower()+"/"
+    for case_folder in glob.glob(prediction_path+"*/"):
         truth_file = os.path.join(case_folder, "truth.nii.gz")
         truth_image = nib.load(truth_file)
         truth = truth_image.get_data()
@@ -37,7 +38,7 @@ def main():
         prediction = prediction_image.get_data()
         rows.append([dice_coefficient(func(truth), func(prediction))for func in masking_functions])
     df = pd.DataFrame.from_records(rows, columns=header)
-    df.to_csv("./prediction/brats_scores.csv")
+    df.to_csv(prediction_path+"brats_scores.csv")
 
     scores = dict()
     for index, score in enumerate(df.columns):
@@ -46,7 +47,7 @@ def main():
 
     plt.boxplot(list(scores.values()), labels=list(scores.keys()))
     plt.ylabel("Dice Coefficient")
-    plt.savefig("validation_scores_boxplot.png")
+    plt.savefig(prediction_path+"validation_scores_boxplot.png")
     plt.close()
 
     training_df = pd.read_csv("./brats/isensee2017/training.log").set_index('epoch')
@@ -57,8 +58,13 @@ def main():
     plt.xlabel('Epoch')
     plt.xlim((0, len(training_df.index)))
     plt.legend(loc='upper right')
-    plt.savefig('loss_graph.png')
+    plt.savefig(prediction_path+'loss_graph.png')
 
 
 if __name__ == "__main__":
-    main()
+
+	parser = argparse.ArgumentParser()
+	parser.add_argument("mode", help="enter model mode: unet OR isensee2017")
+	args = parser.parse_args()
+
+    main(args)
