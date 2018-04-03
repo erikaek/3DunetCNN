@@ -1,6 +1,7 @@
 import numpy as np
 import nibabel as nib
 import os
+import argparse
 import glob
 import pandas as pd
 import matplotlib
@@ -62,9 +63,8 @@ def main(args):
 
 
 if __name__ == "__main__":
-
 	parser = argparse.ArgumentParser()
 	parser.add_argument("mode", help="enter model mode: unet OR isensee2017")
 	args = parser.parse_args()
 
-    main(args)
+	main(args)
