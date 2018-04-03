@@ -17,12 +17,12 @@ def step_decay(epoch, initial_lrate, drop, epochs_drop):
 
 
 def get_callbacks(model_file, initial_learning_rate=0.0001, learning_rate_drop=0.5, learning_rate_epochs=None,
-                  learning_rate_patience=50, logging_file="training.log", verbosity=1,
+                  learning_rate_patience=50, logging_path="./", verbosity=1,
                   early_stopping_patience=None):
     callbacks = list()
     callbacks.append(ModelCheckpoint(model_file, save_best_only=True))
-    callbacks.append(CSVLogger(logging_file, append=True))
-    callbacks.append(TensorBoard(log_dir='./logs', histogram_freq=0, batch_size=6, write_graph=False, write_grads=False,
+    callbacks.append(CSVLogger(logging_path+"training.log", append=True))
+    callbacks.append(TensorBoard(log_dir=logging_path+"logs", histogram_freq=0, batch_size=6, write_graph=False, write_grads=False,
      write_images=True, embeddings_freq=0, embeddings_layer_names=None, embeddings_metadata=None))
 
     if learning_rate_epochs:
@@ -59,7 +59,7 @@ def load_old_model(model_file):
 
 def train_model(model, model_file, training_generator, validation_generator, steps_per_epoch, validation_steps,
                 initial_learning_rate=0.001, learning_rate_drop=0.5, learning_rate_epochs=None, n_epochs=500,
-                learning_rate_patience=20, early_stopping_patience=None):
+                learning_rate_patience=20, early_stopping_patience=None, training_mode="unet"):
     """
     Train a Keras model.
     :param early_stopping_patience: If set, training will end early if the validation loss does not improve after the
@@ -78,6 +78,7 @@ def train_model(model, model_file, training_generator, validation_generator, ste
     :param n_epochs: Total number of epochs to train the model.
     :return: 
     """
+    logging_path = "./brats/"+training_mode+"/"
     model.fit_generator(generator=training_generator,
                         steps_per_epoch=steps_per_epoch,
                         epochs=n_epochs,
@@ -88,4 +89,5 @@ def train_model(model, model_file, training_generator, validation_generator, ste
                                                 learning_rate_drop=learning_rate_drop,
                                                 learning_rate_epochs=learning_rate_epochs,
                                                 learning_rate_patience=learning_rate_patience,
-                                                early_stopping_patience=early_stopping_patience))
+                                                early_stopping_patience=early_stopping_patience,
+                                                logging_path=logging_path))
