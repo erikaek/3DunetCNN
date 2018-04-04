@@ -4,7 +4,8 @@ COPY requirements.txt .
 
 RUN mkdir temp && \
     cd temp && \
-    apt-get install wget \
+    apt-get install update && \
+    apt-get install wget && \
     wget https://support.hdfgroup.org/ftp/HDF5/current/src/hdf5-1.10.1.tar.gz && \
     cd hdf5-1.10.1 && \
     ./configure --enable-threadsafe --enable-cxx --enable-unsupported && \
@@ -16,7 +17,7 @@ RUN pip --no-cache-dir install --upgrade pip && \
     pip --no-cache-dir install -r requirements.txt && \
     pip --no-cache-dir install nipype SimpleITK
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get install -y --no-install-recommends \
       cmake \
       git \
       && \
