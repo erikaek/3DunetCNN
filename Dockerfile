@@ -4,7 +4,7 @@ COPY requirements.txt .
 
 RUN mkdir temp && \
     cd temp && \
-    apt-get install update && \
+    apt-get update && \
     apt-get install wget && \
     wget https://support.hdfgroup.org/ftp/HDF5/current/src/hdf5-1.10.1.tar.gz && \
     cd hdf5-1.10.1 && \
