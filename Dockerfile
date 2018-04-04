@@ -6,7 +6,8 @@ RUN mkdir temp && \
     cd temp/ && \
     apt-get update && \
     apt-get install wget && \
-    wget https://support.hdfgroup.org/ftp/HDF5/current/src/hdf5-1.10.1.tar.gz -P . && \
+    tar -xzvf hdf5-1.10.1.tar.gz && \
+    wget https://support.hdfgroup.org/ftp/HDF5/current/src/hdf5-1.10.1.tar.gz && \
     cd hdf5-1.10.1/ && \
     ./configure --enable-threadsafe --enable-cxx --enable-unsupported && \
     make -j 4 && \
