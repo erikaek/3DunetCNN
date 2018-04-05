@@ -13,7 +13,7 @@ config["image_shape"] = (144, 144, 144)  # This determines what shape the images
 config["patch_shape"] = (32, 32, 32)  # switch to None to train on the whole image
 config["labels"] = (1, 2, 4)  # the label numbers on the input image
 config["n_labels"] = len(config["labels"])
-config["all_modalities"] = ["t1", "t1Gd", "flair", "t2"]
+config["all_modalities"] = ["t1"] #, "t1Gd", "flair", "t2"]
 config["training_modalities"] = config["all_modalities"]  # change this if you want to only use some of the modalities
 config["nb_channels"] = len(config["training_modalities"])
 if "patch_shape" in config and config["patch_shape"] is not None:
@@ -38,7 +38,6 @@ config["augment"] = config["flip"] or config["distort"]
 config["validation_patch_overlap"] = 0  # if > 0, during training, validation patches will be overlapping
 config["training_patch_start_offset"] = (16, 16, 16)  # randomly offset the first patch index by up to this offset
 config["skip_blank"] = True  # if True, then patches without any target will be skipped
-
 config["data_file"] = os.path.abspath("./brats/unet/brats_data.h5")
 config["model_file"] = os.path.abspath("./brats/unet/tumor_segmentation_model.h5")
 config["training_file"] = os.path.abspath("./brats/unet/training_ids.pkl")
