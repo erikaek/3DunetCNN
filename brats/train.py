@@ -103,7 +103,7 @@ def main(overwrite=False):
                 initial_learning_rate=config["initial_learning_rate"],
                 learning_rate_drop=config["learning_rate_drop"],
                 learning_rate_patience=config["patience"],
-                early_stopping_patience=config["early_stop"],
+                early_stopping_patience=None,
                 n_epochs=config["n_epochs"],
                 training_mode="unet")
     data_file_opened.close()
