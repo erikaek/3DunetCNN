@@ -121,7 +121,6 @@ def convert_brats_folder(in_folder, out_folder, truth_name="truth",
         image_file = get_image(in_folder, name)
         out_file = os.path.abspath(os.path.join(out_folder, name + ".nii.gz"))
         perform_bias_correction = no_bias_correction_modalities and name not in no_bias_correction_modalities
-        print(perform_bias_correction)
         normalize_image(image_file, out_file, bias_correction=perform_bias_correction)
     # copy the truth file
     try:
