@@ -208,9 +208,7 @@ def add_data(x_list, y_list, data_file, index, augment=False, augment_flip=False
     :return:
     """
     data, truth = get_data_from_file(data_file, index, patch_shape=patch_shape)
-    print("Data type data: "+str(type(data[0][0][0][0])))
     data = np.float16(data)
-    print("Data type data: "+str(type(data[0][0][0][0])))
 
     if augment:
         if patch_shape is not None:
