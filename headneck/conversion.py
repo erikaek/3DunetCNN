@@ -1,8 +1,10 @@
-
-
+from medpy.io import load, save, header
+import nibabel as nib
+import numpy as np
 import vtk
 import nrrd
 import os.path
+import itk
 
 def readnrrd(filename):
     """Read image in nrrd format."""
@@ -44,22 +46,27 @@ def definefolders():
 
 organs, part_folders, data_folders = definefolders()
 
-for i_pf in range(2):
+for i_pf in range(3):
 
     pf = part_folders[i_pf]
 
     for df in data_folders[i_pf]:
-        readpath = '../../Data/'+pf+'/'+df+'/'
-        savepath = 'data/original/'+df+'/'
+        readpath = '/home/erika/fromWindows/Data/'+pf+'/'+df+'/'
+        savepath = './headneck/data/original/'+df+'/'
 
-        if not os.path.exists(savepath):
-            os.makedirs(savepath)
 
         if os.path.exists(readpath+'structures/'+organs[2]+'.nrrd'):
-            label_data, info = nrrd.read(readpath+'structures/'+organs[2]+'.nrrd')
-            writenifti(label_data, savepath + 'labels.nii.gz', info)
-            ct_data, info = nrrd.read(readpath+'img.nrrd')
-            writenifti(ct_data, savepath+'img.nii.gz', info)
+
+            if not os.path.exists(savepath):
+                os.makedirs(savepath)
+
+            label_data, info = load(readpath+'structures/'+organs[2]+'.nrrd')
+            print(info)
+            save(label_data, savepath + 'truth.nii.gz', info)
+            ct_data, info = load(readpath+'img.nrrd')
+            print(info)
+            writenifti(ct_data, savepath+'ct.nii.gz', info)
+
 
 
 

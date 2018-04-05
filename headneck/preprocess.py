@@ -12,7 +12,7 @@ import SimpleITK as sitk
 import numpy as np
 from nipype.interfaces.ants import N4BiasFieldCorrection
 
-from brats.train import config
+from headneck.train_isensee2017 import config
 
 
 def append_basename(in_file, append):
@@ -21,7 +21,7 @@ def append_basename(in_file, append):
     return os.path.join(dirname, base + append + "." + ext)
 
 
-def get_background_mask(in_folder, out_file, truth_name="GlistrBoost_ManuallyCorrected"):
+def get_background_mask(in_folder, out_file, truth_name="truth"):
     """
     This function computes a common background mask for all of the data in a subject folder.
     :param in_folder: a subject folder from the BRATS dataset.
@@ -115,12 +115,13 @@ def normalize_image(in_file, out_file, bias_correction=True):
     return out_file
 
 
-def convert_brats_folder(in_folder, out_folder, truth_name="GlistrBoost_ManuallyCorrected",
+def convert_brats_folder(in_folder, out_folder, truth_name="truth",
                          no_bias_correction_modalities=None):
     for name in config["all_modalities"]:
         image_file = get_image(in_folder, name)
         out_file = os.path.abspath(os.path.join(out_folder, name + ".nii.gz"))
         perform_bias_correction = no_bias_correction_modalities and name not in no_bias_correction_modalities
+        print(perform_bias_correction)
         normalize_image(image_file, out_file, bias_correction=perform_bias_correction)
     # copy the truth file
     try:
@@ -143,11 +144,11 @@ def convert_brats_data(brats_folder, out_folder, overwrite=False, no_bias_correc
     or tuple.
     :return:
     """
-    for subject_folder in glob.glob(os.path.join(brats_folder, "*", "*")):
+    for subject_folder in glob.glob(os.path.join(brats_folder, "*")):
         if os.path.isdir(subject_folder):
+            print("Processing: "+subject_folder)
             subject = os.path.basename(subject_folder)
-            new_subject_folder = os.path.join(out_folder, os.path.basename(os.path.dirname(subject_folder)),
-                                              subject)
+            new_subject_folder = os.path.join(out_folder, subject)
             if not os.path.exists(new_subject_folder) or overwrite:
                 if not os.path.exists(new_subject_folder):
                     os.makedirs(new_subject_folder)
