@@ -13,7 +13,7 @@ config["image_shape"] = (144, 144, 144)  # This determines what shape the images
 config["patch_shape"] = (32, 32, 32)  # switch to None to train on the whole image
 config["labels"] = (1, 2, 4)  # the label numbers on the input image
 config["n_labels"] = len(config["labels"])
-config["all_modalities"] = ["t1"] #, "t1Gd", "flair", "t2"]
+config["all_modalities"] = ["t1"]#, "t1Gd", "flair", "t2"]
 config["training_modalities"] = config["all_modalities"]  # change this if you want to only use some of the modalities
 config["nb_channels"] = len(config["training_modalities"])
 if "patch_shape" in config and config["patch_shape"] is not None:
@@ -103,7 +103,7 @@ def main(overwrite=False):
                 initial_learning_rate=config["initial_learning_rate"],
                 learning_rate_drop=config["learning_rate_drop"],
                 learning_rate_patience=config["patience"],
-                early_stopping_patience=early_stopping_patience,
+                early_stopping_patience=config["early_stop"],
                 n_epochs=config["n_epochs"],
                 training_mode="unet")
     data_file_opened.close()
