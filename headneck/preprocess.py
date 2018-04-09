@@ -102,6 +102,7 @@ def background_to_zero(in_file, background_file, out_file):
 def check_origin(in_file, in_file2):
     image = sitk.ReadImage(in_file)
     image2 = sitk.ReadImage(in_file2)
+
     if not image.GetOrigin() == image2.GetOrigin():
         image.SetOrigin(image2.GetOrigin())
         sitk.WriteImage(image, in_file)
@@ -143,11 +144,12 @@ def convert_brats_data(brats_folder, out_folder, overwrite=False, no_bias_correc
     or tuple.
     :return:
     """
-    for subject_folder in glob.glob(os.path.join(brats_folder, "*")):
+    for subject_folder in glob.glob(os.path.join(brats_folder, "*","*")):
         if os.path.isdir(subject_folder):
             print("Processing: "+subject_folder)
             subject = os.path.basename(subject_folder)
-            new_subject_folder = os.path.join(out_folder, subject)
+            new_subject_folder = os.path.join(out_folder, os.path.basename(os.path.dirname(subject_folder)),
+                                              subject)
             if not os.path.exists(new_subject_folder) or overwrite:
                 if not os.path.exists(new_subject_folder):
                     os.makedirs(new_subject_folder)

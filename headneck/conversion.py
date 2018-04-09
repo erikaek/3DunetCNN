@@ -43,8 +43,9 @@ def alter_header(nrrdheader,img):
 for readpath in glob.glob(os.path.join("../../Data", "*","*")):
 
     subject = os.path.basename(readpath)
-    savepath = 'data/original/'+subject+'/'
 
+    savepath = os.path.join('data/original/', os.path.basename(os.path.dirname(readpath)),
+                                              subject)
     organfile = os.path.join(readpath,"structures","Mandible.nrrd")
 
     if os.path.exists(organfile):
@@ -69,6 +70,6 @@ for readpath in glob.glob(os.path.join("../../Data", "*","*")):
         ct_img = alter_header(info_ct,ct_img)
         label_img = alter_header(info_ct,label_img)
 
-        nib.save(ct_img, savepath+'ct.nii.gz')
-        nib.save(label_img, savepath + 'truth.nii.gz')
+        nib.save(ct_img, savepath+'/ct.nii.gz')
+        nib.save(label_img, savepath + '/truth.nii.gz')
 
