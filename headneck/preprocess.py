@@ -132,7 +132,7 @@ def convert_brats_folder(in_folder, out_folder, truth_name="truth",
     check_origin(out_file, get_image(in_folder, config["all_modalities"][0]))
 
 
-def convert_brats_data(brats_folder, out_folder, overwrite=False, no_bias_correction_modalities=("flair",)):
+def convert_brats_data(brats_folder, out_folder, overwrite=False, no_bias_correction_modalities=("ct",)):
     """
     Preprocesses the BRATS data and writes it to a given output folder. Assumes the original folder structure.
     :param brats_folder: folder containing the original brats data
