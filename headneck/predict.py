@@ -8,7 +8,7 @@ from unet3d.prediction import run_validation_cases
 
 def main(args):
 
-	prediction_dir = os.path.abspath("./prediction/"+args.mode.lower())
+	prediction_dir = os.path.abspath("./headneck/prediction/"+args.mode.lower())
 
 	if not os.path.exists(prediction_dir):
 

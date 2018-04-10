@@ -25,7 +25,7 @@ def main(args):
     header = ("Background", "Mandible")
     masking_functions = (get_background_mask, get_mandible_mask)
     rows = list()
-    prediction_path = "./prediction/"+args.mode.lower()+"/"
+    prediction_path = "./headneck/prediction/"+args.mode.lower()+"/"
     for case_folder in glob.glob(prediction_path+"*/"):
         truth_file = os.path.join(case_folder, "truth.nii.gz")
         truth_image = nib.load(truth_file)
