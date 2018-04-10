@@ -59,7 +59,7 @@ def load_old_model(model_file):
 
 def train_model(model, model_file, training_generator, validation_generator, steps_per_epoch, validation_steps,
                 initial_learning_rate=0.001, learning_rate_drop=0.5, learning_rate_epochs=None, n_epochs=500,
-                learning_rate_patience=20, early_stopping_patience=None, training_mode="unet"):
+                learning_rate_patience=20, early_stopping_patience=None, logging_path="./brats/unet/"):
     """
     Train a Keras model.
     :param early_stopping_patience: If set, training will end early if the validation loss does not improve after the
@@ -78,7 +78,6 @@ def train_model(model, model_file, training_generator, validation_generator, ste
     :param n_epochs: Total number of epochs to train the model.
     :return: 
     """
-    logging_path = "./brats/"+training_mode+"/"
     model.fit_generator(generator=training_generator,
                         steps_per_epoch=steps_per_epoch,
                         epochs=n_epochs,

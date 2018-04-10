@@ -43,7 +43,7 @@ config["model_file"] = os.path.abspath("./headneck/unet/tumor_segmentation_model
 config["training_file"] = os.path.abspath("./headneck/unet/training_ids.pkl")
 config["validation_file"] = os.path.abspath("./headneck/unet/validation_ids.pkl")
 config["overwrite"] = False  # If True, will previous files. If False, will use previously written files.
-
+config["logging_path"] = os.path.abspath("./headneck/unet/")
 
 def fetch_training_data_files():
     training_data_files = list()
@@ -105,7 +105,7 @@ def main(overwrite=False):
                 learning_rate_patience=config["patience"],
                 early_stopping_patience=config["early_stop"],
                 n_epochs=config["n_epochs"],
-                training_mode="unet")
+                logging_path=config["logging_path"])
     data_file_opened.close()
 
 
