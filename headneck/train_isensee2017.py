@@ -44,7 +44,7 @@ config["model_file"] = os.path.abspath("./headneck/isensee2017/isensee_2017_mode
 config["training_file"] = os.path.abspath("./headneck/isensee2017/isensee_training_ids.pkl")
 config["validation_file"] = os.path.abspath("./headneck/isensee2017/isensee_validation_ids.pkl")
 config["overwrite"] = False  # If True, will previous files. If False, will use previously written files.
-config["logging_path"] = os.path.abspath("./headneck/isensee2017/")
+config["logging_path"] = os.path.abspath("./headneck/isensee2017")
 
 def fetch_training_data_files(return_subject_ids=False):
     training_data_files = list()

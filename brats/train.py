@@ -43,7 +43,7 @@ config["model_file"] = os.path.abspath("./brats/unet/tumor_segmentation_model.h5
 config["training_file"] = os.path.abspath("./brats/unet/training_ids.pkl")
 config["validation_file"] = os.path.abspath("./brats/unet/validation_ids.pkl")
 config["overwrite"] = False  # If True, will previous files. If False, will use previously written files.
-config["logging_path"] = os.path.abspath("./brats/unet/")
+config["logging_path"] = os.path.abspath("./brats/unet")
 
 def fetch_training_data_files():
     training_data_files = list()
