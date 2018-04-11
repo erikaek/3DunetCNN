@@ -10,7 +10,7 @@ from unet3d.training import load_old_model, train_model
 config = dict()
 config["pool_size"] = (2, 2, 2)  # pool size for the max pooling operations
 config["image_shape"] = (144, 144, 144)  # This determines what shape the images will be cropped/resampled to.
-config["patch_shape"] = None #(32, 32, 32)  # switch to None to train on the whole image
+config["patch_shape"] = (32, 32, 32)  # switch to None to train on the whole image
 config["labels"] = (1, 2, 4)  # the label numbers on the input image
 config["n_labels"] = len(config["labels"])
 config["all_modalities"] = ["t1"] # , "t2", "t1Gd", "flair"
@@ -23,7 +23,7 @@ else:
 config["truth_channel"] = config["nb_channels"]
 config["deconvolution"] = True  # if False, will use upsampling instead of deconvolution
 
-config["batch_size"] = 1
+config["batch_size"] = 6
 config["validation_batch_size"] = 1
 config["n_epochs"] = 500  # cutoff the training after this many epochs
 config["patience"] = 10  # learning rate will be reduced after this many epochs if the validation loss is not improving
