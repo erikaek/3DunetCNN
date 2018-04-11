@@ -8,8 +8,6 @@ import matplotlib
 matplotlib.use('agg')
 import matplotlib.pyplot as plt
 
-def get_background_mask(data):
-    return data == 0
 
 def get_whole_tumor_mask(data):
     return data > 0
@@ -28,8 +26,8 @@ def dice_coefficient(truth, prediction):
 
 
 def main(args):
-    header = ("Background","WholeTumor", "TumorCore", "EnhancingTumor")
-    masking_functions = (get_background_mask,get_whole_tumor_mask, get_tumor_core_mask, get_enhancing_tumor_mask)
+    header = ("WholeTumor", "TumorCore", "EnhancingTumor")
+    masking_functions = (get_whole_tumor_mask, get_tumor_core_mask, get_enhancing_tumor_mask)
     rows = list()
     prediction_path = "./brats/prediction/"+args.mode.lower()+"/"
     for case_folder in glob.glob(prediction_path+"*/"):
