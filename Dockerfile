@@ -2,29 +2,37 @@ FROM gcr.io/tensorflow/tensorflow:latest-gpu-py3
 
 COPY requirements.txt .
 
-RUN mkdir temp && \
-    cd temp/ && \
-    apt-get update && \
+RUN apt-get update && \
     apt-get install -y --no-install-recommends apt-utils && \
-    apt-get install wget && \
-    wget https://support.hdfgroup.org/ftp/HDF5/current/src/hdf5-1.10.1.tar.gz && \
-    tar -xzvf hdf5-1.10.1.tar.gz && \
-    cd hdf5-1.10.1/ && \
-    ./configure --enable-threadsafe --disable-hl && \
-    make -j 4 && \
-    make install && \
-    cd ../../
-
-RUN pip --no-cache-dir install --upgrade pip && \
-    pip --no-cache-dir install -r requirements.txt && \
-    pip --no-cache-dir install nipype SimpleITK
-
-RUN apt-get install -y --no-install-recommends \
+    apt-get install -y --no-install-recommends \
       cmake \
       git \
+      wget \
       && \
    apt-get clean && \
+   pip --no-cache-dir install --upgrade pip && \
    rm -rf /var/lib/apt/lists/*
+
+WORKDIR /code
+RUN wget --no-http-keep-alive --output-document=hdf5-1.10.2.tar.gz "https://www.hdfgroup.org/package/source-gzip-2/?wpdmdl=11810&refresh=5ace0c6e959611523453038" && \
+    tar -xzvf hdf5-1.10.2.tar.gz && \
+    cd hdf5-1.10.2 && \
+    ./configure --enable-threadsafe --enable-cxx --enable-unsupported && \
+    make -j4 && \
+    make install && \
+    cd .. && \
+    apt-get install libopenmpi-dev && \
+    pip uninstall h5py && \
+    git clone https://github.com/h5py/h5py.git && \
+    cd h5py/ && \
+    python3 setup.py configure --hdf5=/temp/hdf5-1.10.2/hdf5 && \
+    python3 setup.py build && \
+    python3 setup.py install && \
+    cd .. 
+
+
+RUN pip --no-cache-dir install -r requirements.txt && \
+    pip --no-cache-dir install nipype SimpleITK
 
 RUN pip --no-cache-dir install git+https://www.github.com/farizrahman4u/keras-contrib.git
 
