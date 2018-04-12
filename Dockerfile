@@ -1,6 +1,8 @@
 FROM gcr.io/tensorflow/tensorflow:latest-gpu-py3
 
-COPY requirements.txt .
+RUN mkdir /req
+
+COPY requirements.txt /req
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends apt-utils && \
@@ -28,7 +30,7 @@ RUN wget --no-http-keep-alive --output-document=hdf5-1.10.2.tar.gz "https://www.
     python3 setup.py configure --hdf5=/code/hdf5-1.10.2/hdf5 && \
     python3 setup.py build && \
     python3 setup.py install && \
-    cd .. 
+    cd /req
 
 
 RUN pip --no-cache-dir install -r requirements.txt && \
