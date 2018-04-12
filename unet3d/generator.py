@@ -208,7 +208,6 @@ def add_data(x_list, y_list, data_file, index, augment=False, augment_flip=False
     :return:
     """
     data, truth = get_data_from_file(data_file, index, patch_shape=patch_shape)
-    data = np.float16(data)
 
     if augment:
         if patch_shape is not None:
