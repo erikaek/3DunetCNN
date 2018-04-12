@@ -1,5 +1,6 @@
 import os
 import glob
+import numpy as np
 
 from unet3d.data import write_data_to_file, open_data_file
 from unet3d.generator import get_training_and_validation_generators
@@ -10,7 +11,7 @@ from unet3d.training import load_old_model, train_model
 config = dict()
 config["image_shape"] = (128, 128, 128)  # This determines what shape the images will be cropped/resampled to.
 config["patch_shape"] = None  # switch to None to train on the whole image
-config["labels"] = (0, 1)  # the label numbers on the input image
+config["labels"] = [1]  # the label numbers on the input image
 config["n_base_filters"] = 16
 config["n_labels"] = len(config["labels"])
 config["all_modalities"] = ["ct"]
@@ -27,13 +28,13 @@ config["batch_size"] = 1
 config["validation_batch_size"] = 1
 config["n_epochs"] = 1000  # cutoff the training after this many epochs
 config["patience"] = 100  # learning rate will be reduced after this many epochs if the validation loss is not improving
-config["early_stop"] = 1000  # training will be stopped after this many epochs without the validation loss improving
+config["early_stop"] = 100  # training will be stopped after this many epochs without the validation loss improving
 config["initial_learning_rate"] = 5e-4
 config["learning_rate_drop"] = 0.5  # factor by which the learning rate will be reduced
 config["validation_split"] = 0.8  # portion of the data that will be used for training
 config["flip"] = False  # augments the data by randomly flipping an axis during
 config["permute"] = True  # data shape must be a cube. Augments the data by permuting in various directions
-config["distort"] = None  # switch to None if you want no distortion
+config["distort"] = True  # switch to None if you want no distortion
 config["augment"] = config["flip"] or config["distort"]
 config["validation_patch_overlap"] = 0  # if > 0, during training, validation patches will be overlapping
 config["training_patch_start_offset"] = (16, 16, 16)  # randomly offset the first patch index by up to this offset
@@ -45,6 +46,9 @@ config["training_file"] = os.path.abspath("./headneck/isensee2017/isensee_traini
 config["validation_file"] = os.path.abspath("./headneck/isensee2017/isensee_validation_ids.pkl")
 config["overwrite"] = False  # If True, will previous files. If False, will use previously written files.
 config["logging_path"] = os.path.abspath("./headneck/isensee2017")
+config["sample_weight_mode"] = None # either 'temporal' to include or None to not include
+config["sample_weight"] = [0.0002, 1] # enter wanted weight per class
+config["n_training_samples"] = 32+8
 
 def fetch_training_data_files(return_subject_ids=False):
     training_data_files = list()
@@ -60,6 +64,13 @@ def fetch_training_data_files(return_subject_ids=False):
     else:
         return training_data_files
 
+def generate_sample_weight_matrix(sample_weight_vector, n_training_samples, image_shape, n_channels):
+    n_labels = len(sample_weight_vector)
+    sample_weight_matrix = np.zeros(n_training_samples,n_channels,image_shape(0),image_shape(1),image_shape(2),n_labels) 
+    for i_label in range(n_labels):
+        sample_weight_vector[:,:,:,:,:,i] = n_labels(i_label)
+
+    return sample_weight_matrix
 
 def main(overwrite=False):
     # convert input images into an hdf5 file
@@ -76,7 +87,7 @@ def main(overwrite=False):
         # instantiate new model
         model = isensee2017_model(input_shape=config["input_shape"], n_labels=config["n_labels"],
                                   initial_learning_rate=config["initial_learning_rate"],
-                                  n_base_filters=config["n_base_filters"])
+                                  n_base_filters=config["n_base_filters"],sample_weight_mode=config["sample_weight_mode"])
 
     # get training and testing generators
     train_generator, validation_generator, n_train_steps, n_validation_steps = get_training_and_validation_generators(
@@ -98,6 +109,11 @@ def main(overwrite=False):
         augment_flip=config["flip"],
         augment_distortion_factor=config["distort"])
 
+    if config["sample_weight_mode"] != None:
+        sample_weight = generate_sample_weight_matrix(config["sample_weight"], config["n_training_samples"],config["image_shape"],config["nb_channels"])
+    else:
+        sample_weight = None
+
     # run training
     train_model(model=model,
                 model_file=config["model_file"],
@@ -110,7 +126,8 @@ def main(overwrite=False):
                 learning_rate_patience=config["patience"],
                 early_stopping_patience=config["early_stop"],
                 n_epochs=config["n_epochs"],
-                logging_path=config["logging_path"])
+                logging_path=config["logging_path"],
+                sample_weight=sample_weight)
     data_file_opened.close()
 
 
