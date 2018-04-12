@@ -22,7 +22,7 @@ RUN wget --no-http-keep-alive --output-document=hdf5-1.10.2.tar.gz "https://www.
     make -j4 && \
     make install && \
     cd .. && \
-    pip uninstall h5py && \
+    pip uninstall -y h5py && \
     git clone https://github.com/h5py/h5py.git && \
     cd h5py/ && \
     python3 setup.py configure --hdf5=/temp/hdf5-1.10.2/hdf5 && \
