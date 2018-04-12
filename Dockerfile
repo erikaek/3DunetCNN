@@ -21,5 +21,4 @@ RUN wget --no-http-keep-alive --output-document=hdf5-1.10.2.tar.gz "https://www.
     ./configure --enable-threadsafe --enable-cxx --enable-unsupported && \
     make -j4 && \
     make install && \
-    cd .. && \
-
+    cd .. 
