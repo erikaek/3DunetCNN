@@ -32,7 +32,7 @@ RUN wget --no-http-keep-alive --output-document=hdf5-1.10.2.tar.gz "https://www.
     python3 setup.py install && \
     cd /req
 
-
+WORKDIR /req
 RUN pip --no-cache-dir install -r requirements.txt && \
     pip --no-cache-dir install nipype SimpleITK
 
