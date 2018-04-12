@@ -22,26 +22,4 @@ RUN wget --no-http-keep-alive --output-document=hdf5-1.10.2.tar.gz "https://www.
     make -j4 && \
     make install && \
     cd .. && \
-    pip uninstall -y h5py && \
-    git clone https://github.com/h5py/h5py.git && \
-    cd h5py/ && \
-    python3 setup.py configure --hdf5=/temp/hdf5-1.10.2/hdf5 && \
-    python3 setup.py build && \
-    python3 setup.py install && \
-    cd .. 
 
-
-RUN pip --no-cache-dir install -r requirements.txt && \
-    pip --no-cache-dir install nipype SimpleITK
-
-RUN pip --no-cache-dir install git+https://www.github.com/farizrahman4u/keras-contrib.git
-
-WORKDIR /code
-RUN git clone https://github.com/stnava/ANTs.git && \
-    mkdir /ants && \
-    cd /ants && \
-    cmake /code/ANTs && \
-    make -j 4 
-
-ENV ANTSPATH=/ants/bin
-ENV PATH="${ANTSPATH}:${PATH}"
