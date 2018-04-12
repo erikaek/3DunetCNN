@@ -8,6 +8,7 @@ RUN apt-get update && \
       cmake \
       git \
       wget \
+      libopenmpi-dev \
       && \
    apt-get clean && \
    pip --no-cache-dir install --upgrade pip && \
@@ -21,7 +22,6 @@ RUN wget --no-http-keep-alive --output-document=hdf5-1.10.2.tar.gz "https://www.
     make -j4 && \
     make install && \
     cd .. && \
-    apt-get install libopenmpi-dev && \
     pip uninstall h5py && \
     git clone https://github.com/h5py/h5py.git && \
     cd h5py/ && \
