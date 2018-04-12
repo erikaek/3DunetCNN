@@ -47,7 +47,7 @@ config["validation_file"] = os.path.abspath("./headneck/isensee2017/isensee_vali
 config["overwrite"] = False  # If True, will previous files. If False, will use previously written files.
 config["logging_path"] = os.path.abspath("./headneck/isensee2017")
 config["sample_weight_mode"] = None # either 'temporal' to include or None to not include
-config["sample_weights"] = [0.0002, 1] # enter wanted weight per class
+config["sample_weight"] = [0.0002, 1] # enter wanted weight per class
 config["n_training_samples"] = 32+8
 
 def fetch_training_data_files(return_subject_ids=False):
@@ -109,10 +109,10 @@ def main(overwrite=False):
         augment_flip=config["flip"],
         augment_distortion_factor=config["distort"])
 
-    if config["sample_weight_mode"] != None:
-        sample_weights = generate_sample_weight_matrix(config["sample_weights"], config["n_training_samples"],config["image_shape"],config["nb_channels"])
-    else:
-        sample_weights = None
+    #if config["sample_weight_mode"] != None:
+    #    sample_weight = generate_sample_weight_matrix(config["sample_weight"], config["n_training_samples"],config["image_shape"],config["nb_channels"])
+    #else:
+    #    sample_weight = None
 
     # run training
     train_model(model=model,
@@ -127,7 +127,7 @@ def main(overwrite=False):
                 early_stopping_patience=config["early_stop"],
                 n_epochs=config["n_epochs"],
                 logging_path=config["logging_path"],
-                sample_weights=sample_weights)
+                sample_weight=sample_weight)
     data_file_opened.close()
 
 
