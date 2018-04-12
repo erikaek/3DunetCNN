@@ -126,8 +126,7 @@ def main(overwrite=False):
                 learning_rate_patience=config["patience"],
                 early_stopping_patience=config["early_stop"],
                 n_epochs=config["n_epochs"],
-                logging_path=config["logging_path"],
-                sample_weight=sample_weight)
+                logging_path=config["logging_path"])
     data_file_opened.close()
 
 
