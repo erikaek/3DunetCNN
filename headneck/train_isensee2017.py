@@ -1,6 +1,7 @@
 import os
 import glob
 import numpy as np
+import math
 
 from unet3d.data import write_data_to_file, open_data_file
 from unet3d.generator import get_training_and_validation_generators
@@ -34,8 +35,9 @@ config["learning_rate_drop"] = 0.5  # factor by which the learning rate will be 
 config["validation_split"] = 0.8  # portion of the data that will be used for training
 config["flip"] = False  # augments the data by randomly flipping an axis during
 config["permute"] = True  # data shape must be a cube. Augments the data by permuting in various directions
-config["distort"] = 0.25  # switch to None if you want no distortion
-config["augment"] = config["flip"] or config["distort"]
+config["distortion_factor"] = 0.25  # switch to None if you want no distortion, start with factor 0.25
+config["rotation_factor"] = math.pi/6 # switch to None if you want no distortion, start with factor pi/6
+config["augment"] = config["flip"] or config["distortion_factor"] or config["rotation_factor"]
 config["validation_patch_overlap"] = 0  # if > 0, during training, validation patches will be overlapping
 config["training_patch_start_offset"] = (16, 16, 16)  # randomly offset the first patch index by up to this offset
 config["skip_blank"] = True  # if True, then patches without any target will be skipped
@@ -99,9 +101,8 @@ def main(overwrite=False):
         augment=config["augment"],
         skip_blank=config["skip_blank"],
         augment_flip=config["flip"],
-        augment_distortion_factor=config["distort"],
-        training_sample_weight=config["training_sample_weight"],
-        validation_sample_weight=config["validation_sample_weight"])
+        augment_distortion_factor=config["distortion_factor"],
+        augment_rotation_factor=config["rotation_factor"])
 
     # run training
     train_model(model=model,
