@@ -33,8 +33,9 @@ config["learning_rate_drop"] = 0.5  # factor by which the learning rate will be 
 config["validation_split"] = 0.8  # portion of the data that will be used for training
 config["flip"] = False  # augments the data by randomly flipping an axis during
 config["permute"] = True  # data shape must be a cube. Augments the data by permuting in various directions
-config["distort"] = None  # switch to None if you want no distortion
-config["augment"] = config["flip"] or config["distort"]
+config["distortion_factor"] = None  # switch to None if you want no distortion, start with factor 0.25
+config["rotation_factor"] = None # switch to None if you want no distortion, start with factor pi/6
+config["augment"] = config["flip"] or config["distortion_factor"] or config["rotation_factor"]
 config["validation_patch_overlap"] = 0  # if > 0, during training, validation patches will be overlapping
 config["training_patch_start_offset"] = (16, 16, 16)  # randomly offset the first patch index by up to this offset
 config["skip_blank"] = True  # if True, then patches without any target will be skipped
@@ -96,7 +97,8 @@ def main(overwrite=False):
         augment=config["augment"],
         skip_blank=config["skip_blank"],
         augment_flip=config["flip"],
-        augment_distortion_factor=config["distort"])
+        augment_distortion_factor=config["distortion_factor"],
+        augment_rotation_factor=config["rotation_factor"])
 
     # run training
     train_model(model=model,
