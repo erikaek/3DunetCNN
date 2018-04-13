@@ -101,8 +101,7 @@ def main(overwrite=False):
         augment=config["augment"],
         skip_blank=config["skip_blank"],
         augment_flip=config["flip"],
-        augment_distortion_factor=config["distortion_factor"],
-        augment_rotation_factor=config["rotation_factor"])
+        augment_distortion_factor=config["distortion_factor"])
 
     # run training
     train_model(model=model,
