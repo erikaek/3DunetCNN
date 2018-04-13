@@ -275,8 +275,8 @@ def add_data(x_list, y_list, data_file, index, augment=False, augment_flip=False
         y_list.append(truth)
 
 
-def add_data_sample_weight(x_list, y_list, z_list, data_file, index, augment=False, augment_flip=False, augment_distortion_factor=0.25,
-                           augment_rotation_factor=math.pi/6, patch_shape=False, skip_blank=True, permute=False, sample_weight):
+def add_data_sample_weight(x_list, y_list, z_list, data_file, index, sample_weight, augment=False, augment_flip=False, augment_distortion_factor=0.25,
+                           augment_rotation_factor=math.pi/6, patch_shape=False, skip_blank=True, permute=False):
     """
     Adds data from the data file to the given lists of feature and target data
     :param skip_blank: Data will not be added if the truth vector is all zeros (default is True).
