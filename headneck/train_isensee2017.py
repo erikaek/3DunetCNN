@@ -34,7 +34,7 @@ config["learning_rate_drop"] = 0.5  # factor by which the learning rate will be 
 config["validation_split"] = 0.8  # portion of the data that will be used for training
 config["flip"] = False  # augments the data by randomly flipping an axis during
 config["permute"] = True  # data shape must be a cube. Augments the data by permuting in various directions
-config["distort"] = True  # switch to None if you want no distortion
+config["distort"] = 0.25  # switch to None if you want no distortion
 config["augment"] = config["flip"] or config["distort"]
 config["validation_patch_overlap"] = 0  # if > 0, during training, validation patches will be overlapping
 config["training_patch_start_offset"] = (16, 16, 16)  # randomly offset the first patch index by up to this offset
@@ -47,8 +47,8 @@ config["validation_file"] = os.path.abspath("./headneck/isensee2017/isensee_vali
 config["overwrite"] = False  # If True, will previous files. If False, will use previously written files.
 config["logging_path"] = os.path.abspath("./headneck/isensee2017")
 config["sample_weight_mode"] = None # either 'temporal' to include or None to not include
-config["sample_weight"] = [0.0002, 1] # enter wanted weight per class
-config["n_training_samples"] = 32+8
+config["training_sample_weight"] = None #[0.0002, 1] # enter wanted weight per class for the training phase
+config["validation_sample_weight"] = None #[1, 1] # enter wanted weight per classfor the validation phase
 
 def fetch_training_data_files(return_subject_ids=False):
     training_data_files = list()
@@ -63,14 +63,6 @@ def fetch_training_data_files(return_subject_ids=False):
         return training_data_files, subject_ids
     else:
         return training_data_files
-
-def generate_sample_weight_matrix(sample_weight_vector, n_training_samples, image_shape, n_channels):
-    n_labels = len(sample_weight_vector)
-    sample_weight_matrix = np.zeros(n_training_samples,n_channels,image_shape(0),image_shape(1),image_shape(2),n_labels) 
-    for i_label in range(n_labels):
-        sample_weight_vector[:,:,:,:,:,i] = n_labels(i_label)
-
-    return sample_weight_matrix
 
 def main(overwrite=False):
     # convert input images into an hdf5 file
@@ -107,12 +99,9 @@ def main(overwrite=False):
         augment=config["augment"],
         skip_blank=config["skip_blank"],
         augment_flip=config["flip"],
-        augment_distortion_factor=config["distort"])
-
-    #if config["sample_weight_mode"] != None:
-    #    sample_weight = generate_sample_weight_matrix(config["sample_weight"], config["n_training_samples"],config["image_shape"],config["nb_channels"])
-    #else:
-    #    sample_weight = None
+        augment_distortion_factor=config["distort"],
+        training_sample_weight=config["training_sample_weight"],
+        validation_sample_weight=config["validation_sample_weight"])
 
     # run training
     train_model(model=model,
