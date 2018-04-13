@@ -1,5 +1,5 @@
 """
-Tools for converting, normalizing, and fixing the brats data.
+Tools for converting, normalizing, and fixing the data.
 """
 
 
@@ -24,7 +24,7 @@ def append_basename(in_file, append):
 def get_background_mask(in_folder, out_file, truth_name="truth"):
     """
     This function computes a common background mask for all of the data in a subject folder.
-    :param in_folder: a subject folder from the BRATS dataset.
+    :param in_folder: a subject folder from the dataset.
     :param out_file: an image containing a mask that is 1 where the image data for that subject contains the background.
     :param truth_name: how the truth file is labeled int he subject folder
     :return: the path to the out_file
@@ -116,7 +116,7 @@ def normalize_image(in_file, out_file, bias_correction=True):
     return out_file
 
 
-def convert_brats_folder(in_folder, out_folder, truth_name="truth",
+def convert_folder(in_folder, out_folder, truth_name="truth",
                          no_bias_correction_modalities=None):
     for name in config["all_modalities"]:
         image_file = get_image(in_folder, name)
@@ -133,10 +133,10 @@ def convert_brats_folder(in_folder, out_folder, truth_name="truth",
     check_origin(out_file, get_image(in_folder, config["all_modalities"][0]))
 
 
-def convert_brats_data(brats_folder, out_folder, overwrite=False, no_bias_correction_modalities=("ct",)):
+def convert_data(in_folder, out_folder, overwrite=False, no_bias_correction_modalities=("ct",)):
     """
-    Preprocesses the BRATS data and writes it to a given output folder. Assumes the original folder structure.
-    :param brats_folder: folder containing the original brats data
+    Preprocesses the data and writes it to a given output folder. Assumes the original folder structure.
+    :param_folder: folder containing the original data
     :param out_folder: output folder to which the preprocessed data will be written
     :param overwrite: set to True in order to redo all the preprocessing
     :param no_bias_correction_modalities: performing bias correction could reduce the signal of certain modalities. If
@@ -144,7 +144,7 @@ def convert_brats_data(brats_folder, out_folder, overwrite=False, no_bias_correc
     or tuple.
     :return:
     """
-    for subject_folder in glob.glob(os.path.join(brats_folder, "*","*")):
+    for subject_folder in glob.glob(os.path.join(in_folder, "*","*")):
         if os.path.isdir(subject_folder):
             print("Processing: "+subject_folder)
             subject = os.path.basename(subject_folder)
@@ -153,5 +153,5 @@ def convert_brats_data(brats_folder, out_folder, overwrite=False, no_bias_correc
             if not os.path.exists(new_subject_folder) or overwrite:
                 if not os.path.exists(new_subject_folder):
                     os.makedirs(new_subject_folder)
-                convert_brats_folder(subject_folder, new_subject_folder,
-                                     no_bias_correction_modalities=no_bias_correction_modalities)
+                convert_folder(subject_folder, new_subject_folder,
+                               no_bias_correction_modalities=no_bias_correction_modalities)

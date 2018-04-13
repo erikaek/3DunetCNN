@@ -3,6 +3,7 @@ import nibabel as nib
 from nilearn.image import new_img_like, resample_to_img
 import random
 import itertools
+import math
 
 
 def scale_image(image, scale_factor):
@@ -22,6 +23,26 @@ def flip_image(image, axis):
         new_data = np.flip(image.get_data(), axis=axis)
     return new_img_like(image, data=new_data)
 
+def rotate_image(image, angles):
+    new_affine = np.copy(image.affine)
+
+    rot_x = np.array([[1, 0, 0],
+                     [0, math.cos(angles[0]), -math.sin(angles[0])],
+                     [0, math.sin(angles[0]), math.cos(angles[0])]],
+                     new_affine.dtype)
+
+    rot_y = np.array([[math.cos(angles[1]), 0, math.sin(angles[1])],
+                      [0, 1, 0],
+                      [-math.sin(angles[1]), 0, math.cos(angles[1])]],
+                      new_affine.dtype)
+
+    rot_z = np.array([[math.cos(angles[2]), -math.sin(angles[2]), 0],
+                      [math.sin(angles[2]), math.cos(angles[2]), 0],
+                      [0, 0, 1]],
+                      new_affine.dtype)
+
+    new_affine[:3, :3] = rot_x*rot_y*rot_z
+    return new_img_like(image, data=image.get_data(), affine=new_affine)
 
 def random_flip_dimensions(n_dimensions):
     axis = list()
@@ -34,20 +55,25 @@ def random_flip_dimensions(n_dimensions):
 def random_scale_factor(n_dim=3, mean=1, std=0.25):
     return np.random.normal(mean, std, n_dim)
 
+def random_rotation_angles(n_dim=3, mean=0, std=math.pi/6):
+    return np.random.normal(mean, std, n_dim)
+
 
 def random_boolean():
     return np.random.choice([True, False])
 
 
-def distort_image(image, flip_axis=None, scale_factor=None):
+def distort_image(image, flip_axis=None, scale_factor=None, rotation_angles=None):
     if flip_axis:
         image = flip_image(image, flip_axis)
     if scale_factor is not None:
         image = scale_image(image, scale_factor)
+    if rotation_angles is not None:
+        image = rotate_image(image, rotation_angles)
     return image
 
 
-def augment_data(data, truth, affine, scale_deviation=None, flip=True):
+def augment_data(data, truth, affine, scale_deviation=None, flip=True, rotation_deviation=None):
     n_dim = len(truth.shape)
     if scale_deviation:
         scale_factor = random_scale_factor(n_dim, std=scale_deviation)
@@ -57,15 +83,21 @@ def augment_data(data, truth, affine, scale_deviation=None, flip=True):
         flip_axis = random_flip_dimensions(n_dim)
     else:
         flip_axis = None
+    if rotation_deviation:
+        rotation_angles = random_rotation_angles(n_dim,std=rotation_deviation)
+    else:
+        rotation_angles = None
+
     data_list = list()
     for data_index in range(data.shape[0]):
         image = get_image(data[data_index], affine)
         data_list.append(resample_to_img(distort_image(image, flip_axis=flip_axis,
-                                                       scale_factor=scale_factor), image,
-                                         interpolation="continuous").get_data())
+                                                       scale_factor=scale_factor,
+                                                       rotation_angles=rotation_angles), 
+                                                       image, interpolation="continuous").get_data())
     data = np.asarray(data_list)
     truth_image = get_image(truth, affine)
-    truth_data = resample_to_img(distort_image(truth_image, flip_axis=flip_axis, scale_factor=scale_factor),
+    truth_data = resample_to_img(distort_image(truth_image, flip_axis=flip_axis, scale_factor=scale_factor,rotation_angles=rotation_angles),
                                  truth_image, interpolation="nearest").get_data()
     return data, truth_data
 

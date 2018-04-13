@@ -32,15 +32,20 @@ config["patience"] = 1000  # learning rate will be reduced after this many epoch
 config["early_stop"] = 100  # training will be stopped after this many epochs without the validation loss improving
 config["initial_learning_rate"] = 5e-4
 config["learning_rate_drop"] = 0.5  # factor by which the learning rate will be reduced
-config["validation_split"] = 0.8  # portion of the data that will be used for training
+config["validation_split"] = 0.7  # portion of the data that will be used for training
 config["flip"] = False  # augments the data by randomly flipping an axis during
 config["permute"] = True  # data shape must be a cube. Augments the data by permuting in various directions
-config["distortion_factor"] = 0.25  # switch to None if you want no distortion, start with factor 0.25
-config["rotation_factor"] = math.pi/6 # switch to None if you want no distortion, start with factor pi/6
+config["distortion_factor"] = None  # switch to None if you want no distortion, start with factor 0.25
+config["rotation_factor"] = None # switch to None if you want no distortion, start with factor pi/6
 config["augment"] = config["flip"] or config["distortion_factor"] or config["rotation_factor"]
+config["n_aug_per_sample"] = None # switch to None for no augmentation, amount of times each data sample is to be augmented
 config["validation_patch_overlap"] = 0  # if > 0, during training, validation patches will be overlapping
 config["training_patch_start_offset"] = (16, 16, 16)  # randomly offset the first patch index by up to this offset
 config["skip_blank"] = True  # if True, then patches without any target will be skipped
+config["sample_weight_mode"] = None # either 'temporal' to include or None to not include
+config["training_sample_weight"] = None #[0.0002, 1] # enter wanted weight per class for the training phase
+config["validation_sample_weight"] = None #[1, 1] # enter wanted weight per classfor the validation phase
+
 
 config["data_file"] = os.path.abspath("./headneck/isensee2017/headneck_data.h5")
 config["model_file"] = os.path.abspath("./headneck/isensee2017/isensee_2017_model.h5")
@@ -48,9 +53,7 @@ config["training_file"] = os.path.abspath("./headneck/isensee2017/isensee_traini
 config["validation_file"] = os.path.abspath("./headneck/isensee2017/isensee_validation_ids.pkl")
 config["overwrite"] = False  # If True, will previous files. If False, will use previously written files.
 config["logging_path"] = os.path.abspath("./headneck/isensee2017")
-config["sample_weight_mode"] = None # either 'temporal' to include or None to not include
-config["training_sample_weight"] = None #[0.0002, 1] # enter wanted weight per class for the training phase
-config["validation_sample_weight"] = None #[1, 1] # enter wanted weight per classfor the validation phase
+
 
 def fetch_training_data_files(return_subject_ids=False):
     training_data_files = list()
@@ -101,7 +104,11 @@ def main(overwrite=False):
         augment=config["augment"],
         skip_blank=config["skip_blank"],
         augment_flip=config["flip"],
-        augment_distortion_factor=config["distortion_factor"])
+        augment_distortion_factor=config["distortion_factor"],
+        augment_rotation_factor=config["rotation_factor"],
+        n_aug_per_sample=config["n_aug_per_sample"],
+        training_sample_weight=config["training_sample_weight"],
+        validation_sample_weight=config["validation_sample_weight"])
 
     # run training
     train_model(model=model,

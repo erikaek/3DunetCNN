@@ -40,6 +40,9 @@ def alter_header(nrrdheader,img):
 
     return img
 
+counter = 0
+weight_factor = 0
+
 for readpath in glob.glob(os.path.join("../../Data", "*","*")):
 
     subject = os.path.basename(readpath)
@@ -62,6 +65,8 @@ for readpath in glob.glob(os.path.join("../../Data", "*","*")):
         ct_data = pad_zdim(ct_data,180,0)
         label_data = pad_zdim(label_data,180,0)
 
+        weight_factor += np.sum(label_data)/np.sum(np.ones(ct_data.shape,dtype=ct_data.dtype))
+
         affine = create_affine(info_ct,2)
 
         ct_img = nib.Nifti1Image(ct_data, affine)
@@ -73,3 +78,7 @@ for readpath in glob.glob(os.path.join("../../Data", "*","*")):
         nib.save(ct_img, savepath+'/ct.nii.gz')
         nib.save(label_img, savepath + '/truth.nii.gz')
 
+        counter += 1
+
+weight_factor = weight_factor/counter
+print("mean weight factor: "+str(weight_factor))
