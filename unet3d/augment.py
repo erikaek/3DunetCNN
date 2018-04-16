@@ -44,6 +44,16 @@ def rotate_image(image, angles):
     new_affine[:3, :3] = rot_x*rot_y*rot_z
     return new_img_like(image, data=image.get_data(), affine=new_affine)
 
+
+def mirror_image(image, boolean):   
+
+    if boolean:
+        new_data = np.copy(image.get_data())
+        new_data = new_data[::-1,:,:]
+        image = new_img_like(image, data=new_data)
+        
+    return image
+
 def random_flip_dimensions(n_dimensions):
     axis = list()
     for dim in range(n_dimensions):
@@ -63,17 +73,19 @@ def random_boolean():
     return np.random.choice([True, False])
 
 
-def distort_image(image, flip_axis=None, scale_factor=None, rotation_angles=None):
+def distort_image(image, flip_axis=None, scale_factor=None, rotation_angles=None, mirror=False):
     if flip_axis:
         image = flip_image(image, flip_axis)
     if scale_factor is not None:
         image = scale_image(image, scale_factor)
     if rotation_angles is not None:
         image = rotate_image(image, rotation_angles)
+    if mirror:
+        image = mirror_image(image,mirror)
     return image
 
 
-def augment_data(data, truth, affine, scale_deviation=None, flip=True, rotation_deviation=None):
+def augment_data(data, truth, affine, scale_deviation=None, flip=True, rotation_deviation=None,mirror=False):
     n_dim = len(truth.shape)
     if scale_deviation:
         scale_factor = random_scale_factor(n_dim, std=scale_deviation)
@@ -87,6 +99,8 @@ def augment_data(data, truth, affine, scale_deviation=None, flip=True, rotation_
         rotation_angles = random_rotation_angles(n_dim,std=rotation_deviation)
     else:
         rotation_angles = None
+    if mirror:
+        boolean = random_boolean()
 
     image_list =list()
     n_data = data.shape[0]
@@ -95,10 +109,11 @@ def augment_data(data, truth, affine, scale_deviation=None, flip=True, rotation_
         image = get_image(data[data_index], affine)
         image_list.append(resample_to_img(distort_image(image, flip_axis=flip_axis,
                                                        scale_factor=scale_deviation,
-                                                       rotation_angles=None), 
+                                                       rotation_angles=None,
+                                                       mirror=boolean), 
                                                        image, interpolation="continuous"))
     truth_image = get_image(truth, affine)
-    truth_image = resample_to_img(distort_image(truth_image, flip_axis=flip_axis, scale_factor=scale_factor,rotation_angles=None),
+    truth_image = resample_to_img(distort_image(truth_image, flip_axis=flip_axis, scale_factor=scale_factor,rotation_angles=None,mirror=boolean),
                                  truth_image, interpolation="nearest")
 
     data_list = list()
@@ -107,10 +122,11 @@ def augment_data(data, truth, affine, scale_deviation=None, flip=True, rotation_
         image = image_list[data_index]
         data_list.append(resample_to_img(distort_image(image, flip_axis=None,
                                                        scale_factor=None,
-                                                       rotation_angles=rotation_angles), 
+                                                       rotation_angles=rotation_angles,
+                                                       mirror=None), 
                                                        image, interpolation="continuous").get_data())
     data = np.asarray(data_list)
-    truth_data = resample_to_img(distort_image(truth_image, flip_axis=None, scale_factor=None,rotation_angles=rotation_angles),
+    truth_data = resample_to_img(distort_image(truth_image, flip_axis=None, scale_factor=None,rotation_angles=rotation_angles,mirror=False),
                                  truth_image, interpolation="nearest").get_data()
 
 

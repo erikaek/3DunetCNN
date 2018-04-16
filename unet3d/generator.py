@@ -14,7 +14,7 @@ from .augment import augment_data, random_permutation_x_y
 def get_training_and_validation_generators(data_file, batch_size, n_labels, training_keys_file, validation_keys_file,
                                            data_split=0.8, overwrite=False, labels=None, augment=False,
                                            augment_flip=True, augment_distortion_factor=0.25, augment_rotation_factor=math.pi/6,
-                                           patch_shape=None, validation_patch_overlap=0, training_patch_start_offset=None,
+                                           mirror=True, patch_shape=None, validation_patch_overlap=0, training_patch_start_offset=None,
                                            validation_batch_size=None, skip_blank=True, permute=False):
     """
     Creates the training and validation generators that can be used when training the model.
@@ -65,6 +65,7 @@ def get_training_and_validation_generators(data_file, batch_size, n_labels, trai
                                         augment_flip=augment_flip,
                                         augment_distortion_factor=augment_distortion_factor,
                                         augment_rotation_factor=augment_rotation_factor,
+                                        mirror = mirror,
                                         patch_shape=patch_shape,
                                         patch_overlap=0,
                                         patch_start_offset=training_patch_start_offset,
@@ -136,8 +137,8 @@ def split_list(input_list, split=0.8, shuffle_list=True):
 
 
 def data_generator(data_file, index_list, batch_size=1, n_labels=1, labels=None, augment=False, augment_flip=True,
-                   augment_distortion_factor=0.25, augment_rotation_factor= math.pi/6, patch_shape=None, patch_overlap=0, 
-                   patch_start_offset=None, shuffle_index_list=True, skip_blank=True, permute=False):
+                   augment_distortion_factor=0.25, augment_rotation_factor= math.pi/6, mirror=True, patch_shape=None,
+                    patch_overlap=0, patch_start_offset=None, shuffle_index_list=True, skip_blank=True, permute=False):
 
     orig_index_list = index_list
 
@@ -161,7 +162,7 @@ def data_generator(data_file, index_list, batch_size=1, n_labels=1, labels=None,
 
             add_data(x_list, y_list, data_file, index, augment=augment, augment_flip=augment_flip,
                     augment_distortion_factor=augment_distortion_factor, augment_rotation_factor=augment_rotation_factor,
-                    patch_shape=patch_shape, skip_blank=skip_blank, permute=permute)
+                    mirror=mirror, patch_shape=patch_shape, skip_blank=skip_blank, permute=permute)
             if len(x_list) == batch_size or (len(index_list) == 0 and len(x_list) > 0):
                 yield convert_data(x_list, y_list, n_labels=n_labels, labels=labels)
 
@@ -201,7 +202,7 @@ def create_patch_index_list(index_list, image_shape, patch_shape, patch_overlap,
 
 
 def add_data(x_list, y_list, data_file, index, augment=False, augment_flip=False, augment_distortion_factor=0.25,
-             augment_rotation_factor=math.pi/6,patch_shape=False, skip_blank=True, permute=False):
+             mirror=True, augment_rotation_factor=math.pi/6,patch_shape=False, skip_blank=True, permute=False):
     """
     Adds data from the data file to the given lists of feature and target data
     :param skip_blank: Data will not be added if the truth vector is all zeros (default is True).
@@ -226,7 +227,8 @@ def add_data(x_list, y_list, data_file, index, augment=False, augment_flip=False
             affine = data_file.root.affine[index[0]]
         else:
             affine = data_file.root.affine[index]
-        data, truth = augment_data(data, truth, affine, flip=augment_flip, scale_deviation=augment_distortion_factor,rotation_deviation=augment_rotation_factor)
+        data, truth = augment_data(data, truth, affine, flip=augment_flip, scale_deviation=augment_distortion_factor,
+                                   rotation_deviation=augment_rotation_factor,mirror=mirror)
 
     if permute:
         if data.shape[-3] != data.shape[-2] or data.shape[-2] != data.shape[-1]:
