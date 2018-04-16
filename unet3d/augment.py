@@ -89,16 +89,24 @@ def augment_data(data, truth, affine, scale_deviation=None, flip=True, rotation_
         rotation_angles = None
 
     data_list = list()
+    truth_list = list()
     for data_index in range(data.shape[0]):
         image = get_image(data[data_index], affine)
+        truth_image = get_image(truth[data_index], affine)
         data_list.append(resample_to_img(distort_image(image, flip_axis=flip_axis,
                                                        scale_factor=scale_factor,
                                                        rotation_angles=rotation_angles), 
                                                        image, interpolation="continuous").get_data())
+        truth_list.append(resample_to_img(distort_image(truth_image, flip_axis=flip_axis,
+                                                       scale_factor=scale_factor,
+                                                       rotation_angles=rotation_angles), 
+                                                       truth_image, interpolation="continuous").get_data())
+
     data = np.asarray(data_list)
-    truth_image = get_image(truth, affine)
-    truth_data = resample_to_img(distort_image(truth_image, flip_axis=flip_axis, scale_factor=scale_factor,rotation_angles=rotation_angles),
-                                 truth_image, interpolation="nearest").get_data()
+    truth_data = np.asarray(truth_list)
+    #truth_image = get_image(truth, affine)
+    #truth_data = resample_to_img(distort_image(truth_image, flip_axis=flip_axis, scale_factor=scale_factor,rotation_angles=rotation_angles),
+    #                             truth_image, interpolation="nearest").get_data()
     return data, truth_data
 
 
