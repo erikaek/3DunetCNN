@@ -88,30 +88,28 @@ def augment_data(data, truth, affine, scale_deviation=None, flip=True, rotation_
     else:
         rotation_angles = None
 
-    data_list = list()
+    image_list =list()
     n_data = data.shape[0]
+
     for data_index in range(n_data):
         image = get_image(data[data_index], affine)
-        data_list.append(resample_to_img(distort_image(image, flip_axis=flip_axis,
-                                                       scale_factor=scale_factor,
-                                                       rotation_angles=None), 
-                                                       image, interpolation="continuous").get_data())
-    data = np.asarray(data_list)
+        image_list.append(resample_to_img(distort_image(image, flip_axis=None,
+                                                       scale_factor=None,
+                                                       rotation_angles=rotation_angles), 
+                                                       image, interpolation="continuous"))
     truth_image = get_image(truth, affine)
-    truth_data = resample_to_img(distort_image(truth_image, flip_axis=flip_axis, scale_factor=scale_factor,rotation_angles=None),
-                                 truth_image, interpolation="nearest").get_data()
+    truth_image = resample_to_img(distort_image(truth_image, flip_axis=flip_axis, scale_factor=scale_factor,rotation_angles=None),
+                                 truth_image, interpolation="nearest")
 
-    old_list = data_list
     data_list = list()
-    n_data = data.shape[0]
+
     for data_index in range(n_data):
-        image = old_list[data_index]
+        image = image_list[data_index]
         data_list.append(resample_to_img(distort_image(image, flip_axis=None,
                                                        scale_factor=None,
                                                        rotation_angles=rotation_angles), 
                                                        image, interpolation="continuous").get_data())
     data = np.asarray(data_list)
-    truth_image = truth_data
     truth_data = resample_to_img(distort_image(truth_image, flip_axis=None, scale_factor=None,rotation_angles=rotation_angles),
                                  truth_image, interpolation="nearest").get_data()
 
