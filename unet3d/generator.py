@@ -166,7 +166,7 @@ def data_generator(data_file, index_list, batch_size=1, n_labels=1, labels=None,
             index = index_list.pop()
 
             if sample_weight:
-                add_data_sample_weight(x_list, y_list, z_list, data_file, index, sample_weight=sample_weight, labels=labels, augment=augment, augment_flip=augment_flip,
+                add_data_sample_weight(x_list, y_list, z_list, data_file, index, sample_weight=sample_weight, augment=augment, augment_flip=augment_flip,
                                        augment_distortion_factor=augment_distortion_factor, augment_rotation_factor=augment_rotation_factor, 
                                        patch_shape=patch_shape, skip_blank=skip_blank, permute=permute)
             else:
@@ -215,12 +215,12 @@ def create_patch_index_list(index_list, image_shape, patch_shape, patch_overlap,
         patch_index.extend(itertools.product([index], patches))
     return patch_index
 
-def generate_sample_weight_matrix(sample_weight_vector, labels, shape):
-    n_labels = len(labels)
-    labels = np.array(labels)
-    sample_weight_matrix = np.zeros([shape[0],shape[1],shape[2],n_labels])
+def generate_sample_weight_matrix(sample_weight_vector, shape):
+    sample_weight_vector = np.array(sample_weight_vector)
+    n_labels = len(sample_weight_vector)
+    sample_weight_matrix = np.zeros([shape[0],shape[1],shape[2],n_labels], sample_weight_vector.dtype)
     for i_label in range(n_labels):
-        sample_weight_vector[:,:,:,i_label] = labels[i_label]
+        sample_weight_matrix[:,:,:,i_label] = sample_weight_vector[i_label]
 
     return sample_weight_matrix
 
@@ -265,7 +265,7 @@ def add_data(x_list, y_list, data_file, index, augment=False, augment_flip=False
         y_list.append(truth)
 
 
-def add_data_sample_weight(x_list, y_list, z_list, data_file, index, sample_weight, labels, augment=False, augment_flip=False, augment_distortion_factor=0.25,
+def add_data_sample_weight(x_list, y_list, z_list, data_file, index, sample_weight, augment=False, augment_flip=False, augment_distortion_factor=0.25,
                            augment_rotation_factor=math.pi/6, patch_shape=False, skip_blank=True, permute=False):
     """
     Adds data from the data file to the given lists of feature and target data
@@ -286,7 +286,7 @@ def add_data_sample_weight(x_list, y_list, z_list, data_file, index, sample_weig
     """
     data, truth = get_data_from_file(data_file, index, patch_shape=patch_shape)
 
-    sample_weight_matrix = generate_sample_weight_matrix(sample_weight_vector=sample_weight, labels=labels, shape=data.shape)
+    sample_weight_matrix = generate_sample_weight_matrix(sample_weight_vector=sample_weight, shape=data.shape)
 
     if augment:
         if patch_shape is not None:
