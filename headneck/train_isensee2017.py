@@ -27,12 +27,12 @@ config["deconvolution"] = True  # if False, will use upsampling instead of decon
 
 config["batch_size"] = 1
 config["validation_batch_size"] = 1
-config["n_epochs"] = 1000  # cutoff the training after this many epochs
-config["patience"] = 1000  # learning rate will be reduced after this many epochs if the validation loss is not improving
+config["n_epochs"] = 1500  # cutoff the training after this many epochs
+config["patience"] = 100  # learning rate will be reduced after this many epochs if the validation loss is not improving
 config["early_stop"] = 100  # training will be stopped after this many epochs without the validation loss improving
 config["initial_learning_rate"] = 5e-4
 config["learning_rate_drop"] = 0.5  # factor by which the learning rate will be reduced
-config["validation_split"] = 0.8  # portion of the data that will be used for training
+config["validation_split"] = 0.7  # portion of the data that will be used for training
 config["flip"] = False  # augments the data by randomly flipping an axis during
 config["permute"] = False  # data shape must be a cube. Augments the data by permuting in various directions
 config["distortion_factor"] = 0.25  # switch to None if you want no distortion, start with factor 0.25
@@ -53,7 +53,7 @@ config["logging_path"] = os.path.abspath("./headneck/isensee2017")
 def fetch_training_data_files(return_subject_ids=False):
     training_data_files = list()
     subject_ids = list()
-    for subject_dir in glob.glob(os.path.join(os.path.dirname(__file__), "data", "preprocessed", "*", "*")):
+    for subject_dir in glob.glob(os.path.join(os.path.dirname(__file__), "data", "preprocessed_downsampled", "*", "*")):
         subject_ids.append(os.path.basename(subject_dir))
         subject_files = list()
         for modality in config["training_modalities"] + ["truth"]:
