@@ -94,6 +94,9 @@ def augment_data(data, truth, affine, scale_deviation=None, flip=True, rotation_
         image = get_image(data[data_index], affine)
         truth_image = get_image(truth, affine)
 
+        print(image.shape)
+        print(truth_image.shape)
+
         data_list.append(resample_to_img(distort_image(image, flip_axis=flip_axis,
                                                        scale_factor=scale_factor,
                                                        rotation_angles=rotation_angles), 
