@@ -218,9 +218,9 @@ def create_patch_index_list(index_list, image_shape, patch_shape, patch_overlap,
 def generate_sample_weight_matrix(sample_weight_vector, shape):
     sample_weight_vector = np.array(sample_weight_vector)
     n_labels = len(sample_weight_vector)
-    sample_weight_matrix = np.zeros([shape[0],shape[1],shape[2],shape[3],n_labels], sample_weight_vector.dtype)
+    sample_weight_matrix = np.zeros([shape[1],shape[2],shape[3],n_labels], sample_weight_vector.dtype)
     for i_label in range(n_labels):
-        sample_weight_matrix[:,:,:,:,i_label] = sample_weight_vector[i_label]
+        sample_weight_matrix[:,:,:,i_label] = sample_weight_vector[i_label]
 
     return sample_weight_matrix
 
