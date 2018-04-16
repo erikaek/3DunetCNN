@@ -38,7 +38,6 @@ config["permute"] = True  # data shape must be a cube. Augments the data by perm
 config["distortion_factor"] = 0.25  # switch to None if you want no distortion, start with factor 0.25
 config["rotation_factor"] = math.pi/6 # switch to None if you want no distortion, start with factor math.pi/6
 config["augment"] = config["flip"] or config["distortion_factor"] or config["rotation_factor"]
-config["n_aug_per_sample"] = None # switch to None for no augmentation, amount of times each data sample is to be augmented
 config["validation_patch_overlap"] = 0  # if > 0, during training, validation patches will be overlapping
 config["training_patch_start_offset"] = (16, 16, 16)  # randomly offset the first patch index by up to this offset
 config["skip_blank"] = True  # if True, then patches without any target will be skipped
@@ -106,7 +105,6 @@ def main(overwrite=False):
         augment_flip=config["flip"],
         augment_distortion_factor=config["distortion_factor"],
         augment_rotation_factor=config["rotation_factor"],
-        n_aug_per_sample=config["n_aug_per_sample"],
         training_sample_weight=config["training_sample_weight"],
         validation_sample_weight=config["validation_sample_weight"])
 

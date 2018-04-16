@@ -14,7 +14,7 @@ from .augment import augment_data, random_permutation_x_y
 def get_training_and_validation_generators(data_file, batch_size, n_labels, training_keys_file, validation_keys_file,
                                            data_split=0.8, overwrite=False, labels=None, augment=False,
                                            augment_flip=True, augment_distortion_factor=0.25, augment_rotation_factor=math.pi/6,
-                                           n_aug_per_sample=None, patch_shape=None, validation_patch_overlap=0, training_patch_start_offset=None,
+                                           patch_shape=None, validation_patch_overlap=0, training_patch_start_offset=None,
                                            validation_batch_size=None, skip_blank=True, permute=False, training_sample_weight=None, 
                                            validation_sample_weight=None):
     """
@@ -66,7 +66,6 @@ def get_training_and_validation_generators(data_file, batch_size, n_labels, trai
                                         augment_flip=augment_flip,
                                         augment_distortion_factor=augment_distortion_factor,
                                         augment_rotation_factor=augment_rotation_factor,
-                                        n_aug_per_sample=n_aug_per_sample,
                                         patch_shape=patch_shape,
                                         patch_overlap=0,
                                         patch_start_offset=training_patch_start_offset,
@@ -140,62 +139,52 @@ def split_list(input_list, split=0.8, shuffle_list=True):
 
 
 def data_generator(data_file, index_list, batch_size=1, n_labels=1, labels=None, augment=False, augment_flip=True,
-                   augment_distortion_factor=0.25, augment_rotation_factor= math.pi/6, n_aug_per_sample=None, patch_shape=None, patch_overlap=0, 
+                   augment_distortion_factor=0.25, augment_rotation_factor= math.pi/6, patch_shape=None, patch_overlap=0, 
                    patch_start_offset=None, shuffle_index_list=True, skip_blank=True, permute=False, sample_weight=None):
 
     orig_index_list = index_list
 
-    repeat = True
+    while True:
 
-    if not n_aug_per_sample:
-        n_aug_per_sample = 1
+        x_list = list()
+        y_list = list()
 
-    while repeat:
+        if sample_weight:
+            z_list = list()
 
-        for i_aug_round in range(n_aug_per_sample):
+        if patch_shape:
+            index_list = create_patch_index_list(orig_index_list, data_file.root.data.shape[-3:], patch_shape,
+                                                     patch_overlap, patch_start_offset)
+        else:
+            index_list = copy.copy(orig_index_list)
 
-            x_list = list()
-            y_list = list()
+        if shuffle_index_list:
+            shuffle(index_list)
+
+        while len(index_list) > 0:
+
+            index = index_list.pop()
 
             if sample_weight:
-                z_list = list()
-
-            if patch_shape:
-                index_list = create_patch_index_list(orig_index_list, data_file.root.data.shape[-3:], patch_shape,
-                                                     patch_overlap, patch_start_offset)
-            else:
-                index_list = copy.copy(orig_index_list)
-
-            if shuffle_index_list:
-                shuffle(index_list)
-
-            while len(index_list) > 0:
-
-                index = index_list.pop()
-
-                if sample_weight:
-                    add_data_sample_weight(x_list, y_list, z_list, data_file, index, augment=augment, augment_flip=augment_flip,
+                add_data_sample_weight(x_list, y_list, z_list, data_file, index, augment=augment, augment_flip=augment_flip,
                                        augment_distortion_factor=augment_distortion_factor, augment_rotation_factor=augment_rotation_factor, 
                                        patch_shape=patch_shape, skip_blank=skip_blank, permute=permute, sample_weight=sample_weight)
-                else:
-                    add_data(x_list, y_list, data_file, index, augment=augment, augment_flip=augment_flip,
+            else:
+                add_data(x_list, y_list, data_file, index, augment=augment, augment_flip=augment_flip,
                          augment_distortion_factor=augment_distortion_factor, augment_rotation_factor=augment_rotation_factor,
                          patch_shape=patch_shape, skip_blank=skip_blank, permute=permute)
-                if len(x_list) == batch_size or (len(index_list) == 0 and len(x_list) > 0):
+            if len(x_list) == batch_size or (len(index_list) == 0 and len(x_list) > 0):
 
-                    if sample_weight:
-                        yield convert_data_sample_weight(x_list, y_list, z_list, n_labels=n_labels, labels=labels)
-                        z_list = list()
-                    else:
-                        yield convert_data(x_list, y_list, n_labels=n_labels, labels=labels)
+                if sample_weight:
+                    yield convert_data_sample_weight(x_list, y_list, z_list, n_labels=n_labels, labels=labels)
+                    z_list = list()
+                else:
+                    yield convert_data(x_list, y_list, n_labels=n_labels, labels=labels)
 
-                    x_list = list()
-                    y_list = list()
+                x_list = list()
+                y_list = list()
 
-            if i_aug_round < n_aug_per_sample:
-                index_list = orig_index_list   
-            else:
-                repeat=False     
+              
 
 
 def get_number_of_patches(data_file, index_list, patch_shape=None, patch_overlap=0, patch_start_offset=None,
