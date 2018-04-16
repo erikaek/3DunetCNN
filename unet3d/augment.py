@@ -101,6 +101,8 @@ def augment_data(data, truth, affine, scale_deviation=None, flip=True, rotation_
         rotation_angles = None
     if mirror:
         boolean = random_boolean()
+    else:
+        boolean = False
 
     image_list =list()
     n_data = data.shape[0]
