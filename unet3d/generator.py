@@ -220,7 +220,7 @@ def generate_sample_weight_matrix(sample_weight_vector, labels, shape):
     labels = np.array(labels)
     sample_weight_matrix = np.zeros([shape[0],shape[1],shape[2],n_labels])
     for i_label in range(n_labels):
-        sample_weight_vector[:,:,:,:,:,i_label] = labels[i_label]
+        sample_weight_vector[:,:,:,i_label] = labels[i_label]
 
     return sample_weight_matrix
 
