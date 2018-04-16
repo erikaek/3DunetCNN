@@ -41,9 +41,9 @@ config["augment"] = config["flip"] or config["distortion_factor"] or config["rot
 config["validation_patch_overlap"] = 0  # if > 0, during training, validation patches will be overlapping
 config["training_patch_start_offset"] = (16, 16, 16)  # randomly offset the first patch index by up to this offset
 config["skip_blank"] = True  # if True, then patches without any target will be skipped
-config["sample_weight_mode"] = None # either 'temporal' to include or None to not include
-config["training_sample_weight"] = None #[0.0002, 1] # enter wanted weight per class for the training phase
-config["validation_sample_weight"] = None #[1, 1] # enter wanted weight per classfor the validation phase
+config["sample_weight_mode"] = 'temporal' # either 'temporal' to include or None to not include
+config["training_sample_weight"] = [0.0002, 1] # enter wanted weight per class for the training phase
+config["validation_sample_weight"] = [1, 1] # enter wanted weight per classfor the validation phase
 
 
 config["data_file"] = os.path.abspath("./headneck/isensee2017/headneck_data.h5")
