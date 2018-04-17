@@ -155,7 +155,7 @@ def run_validation_cases(validation_keys_file, model_file, training_modalities, 
         run_validation_case(data_index=index, output_dir=case_directory, model=model, data_file=data_file,
                             training_modalities=training_modalities, output_label_map=output_label_map, labels=labels,
                             threshold=threshold, overlap=overlap, permute=permute)
-    print(data_file.root.subject_ids)
+    print(data_file.root.subject_ids[:])
     data_file.close()
 
 
