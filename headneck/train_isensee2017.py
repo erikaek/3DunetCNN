@@ -25,7 +25,7 @@ else:
 config["truth_channel"] = config["nb_channels"]
 config["deconvolution"] = True  # if False, will use upsampling instead of deconvolution
 
-config["batch_size"] = 3
+config["batch_size"] = 1
 config["validation_batch_size"] = 1
 config["n_epochs"] = 1500  # cutoff the training after this many epochs
 config["patience"] = 100  # learning rate will be reduced after this many epochs if the validation loss is not improving
