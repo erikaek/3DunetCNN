@@ -146,6 +146,8 @@ def run_validation_cases(validation_keys_file, model_file, training_modalities, 
     model = load_old_model(model_file)
     data_file = tables.open_file(hdf5_file, "r")
     for index in validation_indices:
+        print(index)
+        print(data_file.root.subject_ids[index].decode('utf-8'))
         if 'subject_ids' in data_file.root:
             case_directory = os.path.join(output_dir, data_file.root.subject_ids[index].decode('utf-8'))
         else:
