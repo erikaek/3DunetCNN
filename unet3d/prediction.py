@@ -152,10 +152,10 @@ def run_validation_cases(validation_keys_file, model_file, training_modalities, 
         else:
             case_directory = os.path.join(output_dir, "validation_case_{}".format(index))
 
-        print(case_directory)
         run_validation_case(data_index=index, output_dir=case_directory, model=model, data_file=data_file,
                             training_modalities=training_modalities, output_label_map=output_label_map, labels=labels,
                             threshold=threshold, overlap=overlap, permute=permute)
+    print(data_file.root.subject_ids.decode('utf-8'))
     data_file.close()
 
 
