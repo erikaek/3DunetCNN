@@ -118,7 +118,7 @@ def get_validation_split(data_file, training_file, validation_file, data_split=0
         print("Creating validation split...")
         nb_samples = data_file.root.data.shape[0]
         sample_list = list(range(nb_samples))
-        training_list, validation_list = split_list(sample_list, split=data_split)
+        training_list, validation_list = split_list(sample_list, split=data_split, shuffle_list=False)
         pickle_dump(training_list, training_file)
         pickle_dump(validation_list, validation_file)
         return training_list, validation_list
