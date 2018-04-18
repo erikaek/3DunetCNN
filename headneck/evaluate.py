@@ -47,7 +47,12 @@ def main(args):
     plt.savefig(prediction_path+"validation_scores_boxplot.png")
     plt.close()
 
-    training_df = pd.read_csv("./headneck/isensee2017/training.log").set_index('epoch')
+    training_df = pd.read_csv("./headneck/isensee2017/training.log")
+
+    # fix logging epochs
+    training_df['epoch'] = range(len(training_df.index))
+    training_df = training_df.set_index('epoch')
+
 
     plt.plot(training_df['loss'].values, label='training loss')
     plt.plot(training_df['val_loss'].values, label='validation loss')
