@@ -26,6 +26,8 @@ def flip_image(image, axis):
 def rotate_image(image, angles):
     new_affine = np.copy(image.affine)
 
+    rot_mat = np.eye(new_affine.shape[0],new_affine.shape[1])
+
     rot_x = np.array([[1, 0, 0],
                      [0, math.cos(angles[0]), -math.sin(angles[0])],
                      [0, math.sin(angles[0]), math.cos(angles[0])]],
@@ -41,7 +43,12 @@ def rotate_image(image, angles):
                       [0, 0, 1]],
                       new_affine.dtype)
 
-    new_affine[:3, :3] = rot_x*rot_y*rot_z
+    rot_mat[:3,:3] = np.matmul(rot_mat[:3,:3],rot_x)
+    rot_mat[:3,:3] = np.matmul(rot_mat[:3,:3],rot_y)
+    rot_mat[:3,:3] = np.matmul(rot_mat[:3,:3],rot_z)
+
+    new_affine = np.matmul(rot_mat,new_affine)
+
     return new_img_like(image, data=image.get_data(), affine=new_affine)
 
 
@@ -104,36 +111,40 @@ def augment_data(data, truth, affine, scale_deviation=None, flip=True, rotation_
     else:
         boolean = False
 
-    image_list =list()
+    data_list =list()
     n_data = data.shape[0]
 
     for data_index in range(n_data):
         image = get_image(data[data_index], affine)
-        image_list.append(resample_to_img(distort_image(image, flip_axis=flip_axis,
-                                                       scale_factor=scale_deviation,
-                                                       rotation_angles=None,
+        data_list.append(resample_to_img(distort_image(image, flip_axis=flip_axis,
+                                                       scale_factor=scale_factor,
+                                                       rotation_angles=rotation_angles,
                                                        mirror=boolean), 
-                                                       image, interpolation="continuous"))
+                                                       image, interpolation="continuous").get_data())
+    data = np.asarray(data_list)
     truth_image = get_image(truth, affine)
-    truth_image = resample_to_img(distort_image(truth_image, flip_axis=flip_axis, scale_factor=scale_factor,rotation_angles=None,mirror=boolean),
-                                 truth_image, interpolation="nearest")
+    truth_data = resample_to_img(distort_image(truth_image, flip_axis=flip_axis, scale_factor=scale_factor,rotation_angles=rotation_angles,mirror=boolean),
+                                 truth_image, interpolation="nearest").get_data()
+    return data, truth_data
 
-    data_list = list()
+'''    
 
     for data_index in range(n_data):
         image = image_list[data_index]
-        data_list.append(resample_to_img(distort_image(image, flip_axis=None,
-                                                       scale_factor=None,
+        new_image = resample_to_img(distort_image(image, flip_axis=flip_axis,
+                                                       scale_factor=scale_factor,
                                                        rotation_angles=rotation_angles,
-                                                       mirror=None), 
-                                                       image, interpolation="continuous").get_data())
+                                                       mirror=boolean), 
+                                                       image, interpolation="continuous")
     data = np.asarray(data_list)
-    truth_data = resample_to_img(distort_image(truth_image, flip_axis=None, scale_factor=None,rotation_angles=rotation_angles,mirror=False),
-                                 truth_image, interpolation="nearest").get_data()
+    truth_image = get_image(truth, affine)
+    new_truth_image = resample_to_img(distort_image(truth_image, flip_axis=flip_axis, scale_factor=scale_factor,rotation_angles=rotation_angles,mirror=boolean),
+                                 truth_image, interpolation="nearest")
 
+    return new_image, new_truth_image                             
+ '''                                
 
-    return data, truth_data
-
+    
 
 def get_image(data, affine, nib_class=nib.Nifti1Image):
     return nib_class(dataobj=data, affine=affine)
