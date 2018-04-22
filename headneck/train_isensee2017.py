@@ -27,7 +27,7 @@ config["deconvolution"] = True  # if False, will use upsampling instead of decon
 
 config["batch_size"] = 2
 config["validation_batch_size"] = 1
-config["n_epochs"] = 2000  # cutoff the training after this many epochs
+config["n_epochs"] = 3000  # cutoff the training after this many epochs
 config["patience"] = 200  # learning rate will be reduced after this many epochs if the validation loss is not improving
 config["early_stop"] = 200  # training will be stopped after this many epochs without the validation loss improving
 config["initial_learning_rate"] = 5e-4
@@ -35,7 +35,7 @@ config["learning_rate_drop"] = 0.5  # factor by which the learning rate will be 
 config["validation_split"] = 0.74  # portion of the data that will be used for training
 config["flip"] = False  # augments the data by randomly flipping an axis during
 config["permute"] = False  # data shape must be a cube. Augments the data by permuting in various directions
-config["distortion_factor"] = None  # switch to None if you want no distortion, start with factor 0.1
+config["distortion_factor"] = 0.1  # switch to None if you want no distortion, start with factor 0.1
 config["rotation_factor"] = None # switch to None if you want no distortion, start with factor 0.01
 config["mirror"] = None # True or False for random mirroring left right (x-direction)
 config["augment"] = config["flip"] or config["distortion_factor"] or config["rotation_factor"] or config["mirror"]
