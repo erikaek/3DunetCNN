@@ -79,9 +79,9 @@ def main(overwrite=False):
         model = load_old_model(config["model_file"])
     else:
         # instantiate new model
-        model, parallel_model = isensee2017_model(input_shape=config["input_shape"], n_labels=config["n_labels"],
-                                  				  initial_learning_rate=config["initial_learning_rate"],
-                                  				  n_base_filters=config["n_base_filters"], n_gpus=config["n_gpus"])
+        model = isensee2017_model(input_shape=config["input_shape"], n_labels=config["n_labels"],
+                  				  initial_learning_rate=config["initial_learning_rate"],
+                   				  n_base_filters=config["n_base_filters"])
 
     # get training and testing generators
     train_generator, validation_generator, n_train_steps, n_validation_steps = get_training_and_validation_generators(
