@@ -25,7 +25,7 @@ else:
 config["truth_channel"] = config["nb_channels"]
 config["deconvolution"] = True  # if False, will use upsampling instead of deconvolution
 
-config["batch_size"] = 1
+config["batch_size"] = 2
 config["validation_batch_size"] = 1
 config["n_epochs"] = 3000  # cutoff the training after this many epochs
 config["patience"] = 200  # learning rate will be reduced after this many epochs if the validation loss is not improving
@@ -49,7 +49,7 @@ config["training_file"] = os.path.abspath("./headneck/isensee2017/isensee_traini
 config["validation_file"] = os.path.abspath("./headneck/isensee2017/isensee_validation_ids.pkl")
 config["overwrite"] = False  # If True, will previous files. If False, will use previously written files.
 config["logging_path"] = os.path.abspath("./headneck/isensee2017")
-config["n_gpus"] = 2 # enter how many gpus you want to use
+config["n_gpus"] = 1 # enter how many gpus you want to use
 
 
 def fetch_training_data_files(return_subject_ids=False):
@@ -79,7 +79,7 @@ def main(overwrite=False):
         model = load_old_model(config["model_file"])
     else:
         # instantiate new model
-        model, parallel_model = isensee2017_model(input_shape=config["input_shape"], n_labels=config["n_labels"],
+        model = isensee2017_model(input_shape=config["input_shape"], n_labels=config["n_labels"],
                                   				  initial_learning_rate=config["initial_learning_rate"],
                                   				  n_base_filters=config["n_base_filters"], n_gpus=config["n_gpus"])
 
@@ -112,7 +112,6 @@ def main(overwrite=False):
                 validation_generator=validation_generator,
                 steps_per_epoch=n_train_steps,
                 validation_steps=n_validation_steps,
-                parallel_model=parallel_model,
                 initial_learning_rate=config["initial_learning_rate"],
                 learning_rate_drop=config["learning_rate_drop"],
                 learning_rate_patience=config["patience"],
