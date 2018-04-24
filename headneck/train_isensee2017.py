@@ -35,9 +35,9 @@ config["learning_rate_drop"] = 0.5  # factor by which the learning rate will be 
 config["validation_split"] = 0.74  # portion of the data that will be used for training
 config["flip"] = False  # augments the data by randomly flipping an axis during
 config["permute"] = False  # data shape must be a cube. Augments the data by permuting in various directions
-config["distortion_factor"] = 0.1  # switch to None if you want no distortion, start with factor 0.1
+config["distortion_factor"] = None  # switch to None if you want no distortion, start with factor 0.1
 config["rotation_factor"] = None # switch to None if you want no distortion, start with factor 0.01
-config["mirror"] = None # True or False for random mirroring left right (x-direction)
+config["mirror"] = True # True or False for random mirroring left right (x-direction)
 config["augment"] = config["flip"] or config["distortion_factor"] or config["rotation_factor"] or config["mirror"]
 config["validation_patch_overlap"] = 0  # if > 0, during training, validation patches will be overlapping
 config["training_patch_start_offset"] = (16, 16, 16)  # randomly offset the first patch index by up to this offset
@@ -49,6 +49,7 @@ config["training_file"] = os.path.abspath("./headneck/isensee2017/isensee_traini
 config["validation_file"] = os.path.abspath("./headneck/isensee2017/isensee_validation_ids.pkl")
 config["overwrite"] = False  # If True, will previous files. If False, will use previously written files.
 config["logging_path"] = os.path.abspath("./headneck/isensee2017")
+config["n_gpus"] = 2 # enter how many gpus you want to use
 
 
 def fetch_training_data_files(return_subject_ids=False):
@@ -78,9 +79,9 @@ def main(overwrite=False):
         model = load_old_model(config["model_file"])
     else:
         # instantiate new model
-        model = isensee2017_model(input_shape=config["input_shape"], n_labels=config["n_labels"],
-                                  initial_learning_rate=config["initial_learning_rate"],
-                                  n_base_filters=config["n_base_filters"])
+        model, parallel_model = isensee2017_model(input_shape=config["input_shape"], n_labels=config["n_labels"],
+                                  				  initial_learning_rate=config["initial_learning_rate"],
+                                  				  n_base_filters=config["n_base_filters"], n_gpus=config["n_gpus"])
 
     # get training and testing generators
     train_generator, validation_generator, n_train_steps, n_validation_steps = get_training_and_validation_generators(
@@ -111,6 +112,7 @@ def main(overwrite=False):
                 validation_generator=validation_generator,
                 steps_per_epoch=n_train_steps,
                 validation_steps=n_validation_steps,
+                parallel_model=parallel_model,
                 initial_learning_rate=config["initial_learning_rate"],
                 learning_rate_drop=config["learning_rate_drop"],
                 learning_rate_patience=config["patience"],
