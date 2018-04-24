@@ -79,9 +79,26 @@ def train_model(model, model_file, training_generator, validation_generator, ste
     :return: 
     """
 
-    if parallel_model:
         
-        parallel_model.fit_generator(generator=training_generator,
+    model.fit_generator(generator=training_generator,
+                            steps_per_epoch=steps_per_epoch,
+                            epochs=n_epochs,
+                            validation_data=validation_generator,
+                            validation_steps=validation_steps,
+                            max_queue_size=1,
+                            use_multiprocessing=True,
+                            callbacks=get_callbacks(model_file,
+                                                    initial_learning_rate=initial_learning_rate,
+                                                    learning_rate_drop=learning_rate_drop,
+                                                    learning_rate_epochs=learning_rate_epochs,
+                                                    learningarning_rate_patience=learning_rate_patience,
+                                                    early_stopping_patience=early_stopping_patience,
+                                                    logging_path=logging_path))        
+
+
+    '''        
+
+    parallel_model.fit_generator(generator=training_generator,
                                      steps_per_epoch=steps_per_epoch,
                                      epochs=n_epochs,
                                      validation_data=validation_generator,
@@ -95,20 +112,4 @@ def train_model(model, model_file, training_generator, validation_generator, ste
                                                              learning_rate_patience=learning_rate_patience,
                                                              early_stopping_patience=early_stopping_patience,
                                                              logging_path=logging_path))
-
-    else:
-
-        model.fit_generator(generator=training_generator,
-                            steps_per_epoch=steps_per_epoch,
-                            epochs=n_epochs,
-                            validation_data=validation_generator,
-                            validation_steps=validation_steps,
-                            max_queue_size=1,
-                            use_multiprocessing=True,
-                            callbacks=get_callbacks(model_file,
-                                                    initial_learning_rate=initial_learning_rate,
-                                                    learning_rate_drop=learning_rate_drop,
-                                                    learning_rate_epochs=learning_rate_epochs,
-                                                    learningarning_rate_patience=learning_rate_patience,
-                                                    early_stopping_patience=early_stopping_patience,
-                                                    logging_path=logging_path))
+    '''                                                             
