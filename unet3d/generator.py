@@ -249,7 +249,6 @@ def get_data_from_file(data_file, index, patch_shape=None):
         x = get_patch_from_3d_data(data, patch_shape, patch_index)
         y = get_patch_from_3d_data(truth, patch_shape, patch_index)
     else:
-        print(index)
         x, y = data_file.root.data[index], data_file.root.truth[index, 0]
     return x, y
 
