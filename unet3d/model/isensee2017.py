@@ -1,3 +1,4 @@
+import tensorflow as tf
 from functools import partial
 
 from keras.layers import Input, LeakyReLU, Add, UpSampling3D, Activation, SpatialDropout3D
@@ -77,8 +78,9 @@ def isensee2017_model(input_shape=(4, 128, 128, 128), n_base_filters=16, depth=5
     activation_block = Activation(activation_name)(output_layer)
 
     model = Model(inputs=inputs, outputs=activation_block)
-    parallel_model = multi_gpu_model(model, gpus=n_gpus)
-    parallel_model.compile(optimizer=optimizer(lr=initial_learning_rate), loss=loss_function)
+    with tf.device('/cpu:0'):
+        parallel_model = multi_gpu_model(model, gpus=n_gpus)
+        parallel_model.compile(optimizer=optimizer(lr=initial_learning_rate), loss=loss_function)
 
     #model.compile(optimizer=optimizer(lr=initial_learning_rate), loss=loss_function)
 
