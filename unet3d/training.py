@@ -20,7 +20,13 @@ def get_callbacks(model, model_file, initial_learning_rate=0.0001, learning_rate
                   learning_rate_patience=50, logging_path="./", verbosity=1,
                   early_stopping_patience=None):
     callbacks = list()
-    callbacks.append(ModelCheckpoint(model_file, save_best_only=True).set_model(model))
+
+    cbk = ModelCheckpoint(model_file, save_best_only=True)
+
+    if cbk:
+        cbk = cbk.set_model(model)
+
+    callbacks.append(cbk)
     callbacks.append(CSVLogger(logging_path+"/training.log", append=True))
     callbacks.append(TensorBoard(log_dir=logging_path+"/logs", histogram_freq=0, batch_size=2, write_graph=False, write_grads=False,
      write_images=True, embeddings_freq=0, embeddings_layer_names=None, embeddings_metadata=None))
