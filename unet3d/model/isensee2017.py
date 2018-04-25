@@ -11,6 +11,22 @@ from keras.utils import multi_gpu_model
 create_convolution_block = partial(create_convolution_block, activation=LeakyReLU, instance_normalization=True)
 
 
+class ModelMGPU(Model):
+    def __init__(self, ser_model, gpus):
+        pmodel = multi_gpu_model(ser_model, gpus)
+        self.__dict__.update(pmodel.__dict__)
+        self._smodel = ser_model
+
+    def __getattribute__(self, attrname):
+        '''Override load and save methods to be used from the serial-model. The
+        serial-model holds references to the weights in the multi-gpu model.
+        '''
+        # return Model.__getattribute__(self, attrname)
+        if 'load' in attrname or 'save' in attrname:
+            return getattr(self._smodel, attrname)
+
+        return super(ModelMGPU, self).__getattribute__(attrname)
+
 def isensee2017_model(input_shape=(4, 128, 128, 128), n_base_filters=16, depth=5, dropout_rate=0.3,
                       n_segmentation_levels=3, n_labels=4, optimizer=Adam, initial_learning_rate=5e-4,
                       loss_function=weighted_dice_coefficient_loss, activation_name="sigmoid",n_gpus=2):
@@ -77,12 +93,12 @@ def isensee2017_model(input_shape=(4, 128, 128, 128), n_base_filters=16, depth=5
     activation_block = Activation(activation_name)(output_layer)
 
     model = Model(inputs=inputs, outputs=activation_block)
-    parallel_model = multi_gpu_model(model, gpus=n_gpus)
+    parallel_model = ModelMGPU(model, gpus=n_gpus)
     parallel_model.compile(optimizer=optimizer(lr=initial_learning_rate), loss=loss_function)
 
     model.compile(optimizer=optimizer(lr=initial_learning_rate), loss=loss_function)
 
-    return model
+    return model, parallel_model
 
 
 def create_localization_module(input_layer, n_filters):
