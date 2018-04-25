@@ -125,6 +125,9 @@ def augment_data(data, truth, affine, scale_deviation=None, flip=True, rotation_
     truth_image = get_image(truth, affine)
     truth_data = resample_to_img(distort_image(truth_image, flip_axis=flip_axis, scale_factor=scale_factor,rotation_angles=rotation_angles,mirror=boolean),
                                  truth_image, interpolation="nearest").get_data()
+
+    print(rotation_angles)
+
     return data, truth_data
     
 '''
