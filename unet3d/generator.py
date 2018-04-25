@@ -156,6 +156,9 @@ def data_generator(data_file, index_list, batch_size=1, n_labels=1, labels=None,
         if shuffle_index_list:
             shuffle(index_list)
 
+        if len(index_list)%2 != 0:
+            index_list = index_list[:-1]
+
         while len(index_list) > 0:
 
             index = index_list.pop()
