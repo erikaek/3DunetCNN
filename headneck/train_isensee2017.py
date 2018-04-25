@@ -103,7 +103,8 @@ def main(overwrite=False):
         augment_flip=config["flip"],
         augment_distortion_factor=config["distortion_factor"],
         augment_rotation_factor=config["rotation_factor"],
-        mirror=config["mirror"])
+        mirror=config["mirror"],
+        n_gpus=config["n_gpus"])
 
     # run training
     train_model(model=model,
