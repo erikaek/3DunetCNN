@@ -179,7 +179,7 @@ def train_model(model, model_file, training_generator, validation_generator, ste
     """
 
         
-    parallel_model.fit_generator(generator=training_generator,
+    model.fit_generator(generator=training_generator,
                             steps_per_epoch=steps_per_epoch,
                             epochs=n_epochs,
                             validation_data=validation_generator,
