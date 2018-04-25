@@ -49,7 +49,15 @@ def rotate_image(image, angles):
 
     new_affine = np.matmul(rot_mat,new_affine)
 
-    return image # new_img_like(image, data=image.get_data(), affine=new_affine)
+    print(image.get_data().dtype)
+    print(image.get_data().shape)
+
+    new_image = new_img_like(image, data=image.get_data(), affine=new_affine)
+
+    print(new_image.get_data().dtype)
+    print(new_image.get_data().shape)
+
+    return new_image
 
 
 def mirror_image(image, boolean):   
