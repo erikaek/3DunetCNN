@@ -27,7 +27,7 @@ def rotate_image(image, angles):
     new_affine = np.copy(image.affine)
 
     print(new_affine)
-    
+
     rot_mat = np.eye(new_affine.shape[0],new_affine.shape[1], dtype=new_affine.dtype)
 
     rot_x = np.array([[1, 0, 0],
@@ -54,6 +54,8 @@ def rotate_image(image, angles):
     print(new_affine)
 
     new_image = new_img_like(image, data=image.get_data(), affine=new_affine)
+
+    print(new_image.affine)
 
     return new_image
 
