@@ -79,7 +79,7 @@ def main(overwrite=False):
         model = load_old_model(config["model_file"])
     else:
         # instantiate new model
-        model, parallel_model = isensee2017_model(input_shape=config["input_shape"], n_labels=config["n_labels"],
+        model = isensee2017_model(input_shape=config["input_shape"], n_labels=config["n_labels"],
                   				  initial_learning_rate=config["initial_learning_rate"],
                    				  n_base_filters=config["n_base_filters"],n_gpus=config["n_gpus"])
 
@@ -117,8 +117,7 @@ def main(overwrite=False):
                 learning_rate_patience=config["patience"],
                 early_stopping_patience=config["early_stop"],
                 n_epochs=config["n_epochs"],
-                logging_path=config["logging_path"],
-        		parallel_model=model)
+                logging_path=config["logging_path"])
     data_file_opened.close()
 
 
