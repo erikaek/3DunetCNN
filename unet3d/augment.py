@@ -1,6 +1,6 @@
 import numpy as np
 import nibabel as nib
-from nilearn.image import new_img_like, resample_img
+from nilearn.image import new_img_like, resample_to_img
 import random
 import itertools
 import math
@@ -116,14 +116,14 @@ def augment_data(data, truth, affine, scale_deviation=None, flip=True, rotation_
 
     for data_index in range(n_data):
         image = get_image(data[data_index], affine)
-        data_list.append(resample_img(distort_image(image, flip_axis=flip_axis,
+        data_list.append(resample_to_img(distort_image(image, flip_axis=flip_axis,
                                                        scale_factor=scale_factor,
                                                        rotation_angles=rotation_angles,
                                                        mirror=boolean), 
                                                        image, interpolation="continuous").get_data())
     data = np.asarray(data_list)
     truth_image = get_image(truth, affine)
-    truth_data = resample_img(distort_image(truth_image, flip_axis=flip_axis, scale_factor=scale_factor,rotation_angles=rotation_angles,mirror=boolean),
+    truth_data = resample_to_img(distort_image(truth_image, flip_axis=flip_axis, scale_factor=scale_factor,rotation_angles=rotation_angles,mirror=boolean),
                                  truth_image, interpolation="nearest").get_data()
     return data, truth_data
     
