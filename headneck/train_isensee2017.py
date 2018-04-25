@@ -118,7 +118,7 @@ def main(overwrite=False):
                 early_stopping_patience=config["early_stop"],
                 n_epochs=config["n_epochs"],
                 logging_path=config["logging_path"],
-        		parallel_model=parallel_model)
+        		parallel_model=model)
     data_file_opened.close()
 
 
