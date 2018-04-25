@@ -24,18 +24,10 @@ def flip_image(image, axis):
     return new_img_like(image, data=new_data)
 
 def rotate_image(image, angles):
-    new_affine = np.copy(image.affine)
+    old_affine = np.copy(image.affine)
 
     rot_mat = np.eye(new_affine.shape[0],new_affine.shape[1], dtype=new_affine.dtype)
 
-    new_affine = np.matmul(rot_mat,new_affine)
-
-    new_image = new_img_like(image, data=image.get_data(), affine=new_affine)
-
-    return new_image
-
-
-'''
     rot_x = np.array([[1, 0, 0],
                      [0, math.cos(angles[0]), -math.sin(angles[0])],
                      [0, math.sin(angles[0]), math.cos(angles[0])]],
@@ -55,12 +47,15 @@ def rotate_image(image, angles):
     rot_mat[:3,:3] = np.matmul(rot_mat[:3,:3],rot_y)
     rot_mat[:3,:3] = np.matmul(rot_mat[:3,:3],rot_x)
 
-    new_affine = np.matmul(rot_mat,new_affine)
+    new_affine = np.matmul(rot_mat,old_affine)
+
+    print(old_affine)
+    print(new_affine)
 
     new_image = new_img_like(image, data=image.get_data(), affine=new_affine)
 
     return new_image
-'''
+
 
 def mirror_image(image, boolean):   
 
