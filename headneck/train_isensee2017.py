@@ -49,7 +49,7 @@ config["training_file"] = os.path.abspath("./headneck/isensee2017/isensee_traini
 config["validation_file"] = os.path.abspath("./headneck/isensee2017/isensee_validation_ids.pkl")
 config["overwrite"] = False  # If True, will previous files. If False, will use previously written files.
 config["logging_path"] = os.path.abspath("./headneck/isensee2017")
-config["n_gpus"] = 2 # enter how many gpus you want to use
+config["n_gpus"] = 1 # enter how many gpus you want to use
 
 
 def fetch_training_data_files(return_subject_ids=False):
