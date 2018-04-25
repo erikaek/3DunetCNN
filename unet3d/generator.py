@@ -159,8 +159,8 @@ def data_generator(data_file, index_list, batch_size=1, n_labels=1, labels=None,
             shuffle(index_list)
 
         if len(index_list)%n_gpus != 0:
-            print(len(index_list)%n_gpus)
-            index_list = index_list[:-1]
+            cut_by = len(index_list)%n_gpus
+            index_list = index_list[:-cut_by]
 
         while len(index_list) > 0:
 
