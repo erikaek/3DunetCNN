@@ -17,6 +17,7 @@ RUN apt-get update && \
    pip --no-cache-dir install --upgrade pip && \
    rm -rf /var/lib/apt/lists/*
 
+RUN curl --silent http://www.scipy-lectures.org/_downloads/gdbinit >> ~/.gdbinit
 
 # WORKDIR /code
 # RUN wget --no-http-keep-alive --output-document=hdf5-1.10.2.tar.gz "https://www.hdfgroup.org/package/source-gzip-2/?wpdmdl=11810&refresh=5ace0c6e959611523453038" && \
