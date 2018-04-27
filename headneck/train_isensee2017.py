@@ -25,10 +25,10 @@ else:
 config["truth_channel"] = config["nb_channels"]
 config["deconvolution"] = True  # if False, will use upsampling instead of deconvolution
 
-config["batch_size"] = 1
+config["batch_size"] = 2
 config["validation_batch_size"] = 1
 config["n_epochs"] = 3000  # cutoff the training after this many epochs
-config["patience"] = 50  # learning rate will be reduced after this many epochs if the validation loss is not improving
+config["patience"] = 100  # learning rate will be reduced after this many epochs if the validation loss is not improving
 config["early_stop"] = 200  # training will be stopped after this many epochs without the validation loss improving
 config["initial_learning_rate"] = 5e-4
 config["learning_rate_drop"] = 0.5  # factor by which the learning rate will be reduced
@@ -43,12 +43,12 @@ config["validation_patch_overlap"] = 0  # if > 0, during training, validation pa
 config["training_patch_start_offset"] = (16, 16, 16)  # randomly offset the first patch index by up to this offset
 config["skip_blank"] = True  # if True, then patches without any target will be skipped
 
-config["data_file"] = os.path.abspath("./headneck/isensee2017_2/headneck_data.h5")
-config["model_file"] = os.path.abspath("./headneck/isensee2017_2/isensee_2017_model.h5")
-config["training_file"] = os.path.abspath("./headneck/isensee2017_2/isensee_training_ids.pkl")
-config["validation_file"] = os.path.abspath("./headneck/isensee2017_2/isensee_validation_ids.pkl")
+config["data_file"] = os.path.abspath("./headneck/isensee2017/headneck_data.h5")
+config["model_file"] = os.path.abspath("./headneck/isensee2017/isensee_2017_model.h5")
+config["training_file"] = os.path.abspath("./headneck/isensee2017/isensee_training_ids.pkl")
+config["validation_file"] = os.path.abspath("./headneck/isensee2017/isensee_validation_ids.pkl")
 config["overwrite"] = False  # If True, will previous files. If False, will use previously written files.
-config["logging_path"] = os.path.abspath("./headneck/isensee2017_2/training.log")
+config["logging_path"] = os.path.abspath("./headneck/isensee2017/training.log")
 config["n_gpus"] = 1 # enter how many gpus you want to use
 
 
