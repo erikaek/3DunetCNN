@@ -25,7 +25,7 @@ else:
 config["truth_channel"] = config["nb_channels"]
 config["deconvolution"] = True  # if False, will use upsampling instead of deconvolution
 
-config["batch_size"] = 2
+config["batch_size"] = 1
 config["validation_batch_size"] = 1
 config["n_epochs"] = 3000  # cutoff the training after this many epochs
 config["patience"] = 50  # learning rate will be reduced after this many epochs if the validation loss is not improving
@@ -44,11 +44,11 @@ config["training_patch_start_offset"] = (16, 16, 16)  # randomly offset the firs
 config["skip_blank"] = True  # if True, then patches without any target will be skipped
 
 config["data_file"] = os.path.abspath("./headneck/isensee2017/headneck_data.h5")
-config["model_file"] = os.path.abspath("./headneck/isensee2017/isensee_2017_model.h5")
+config["model_file"] = os.path.abspath("./headneck/isensee2017/isensee_2017_model_BS1.h5")
 config["training_file"] = os.path.abspath("./headneck/isensee2017/isensee_training_ids.pkl")
 config["validation_file"] = os.path.abspath("./headneck/isensee2017/isensee_validation_ids.pkl")
 config["overwrite"] = False  # If True, will previous files. If False, will use previously written files.
-config["logging_path"] = os.path.abspath("./headneck/isensee2017")
+config["logging_path"] = os.path.abspath("./headneck/isensee2017/training_BS1.log")
 config["n_gpus"] = 1 # enter how many gpus you want to use
 
 
