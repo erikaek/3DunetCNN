@@ -10,7 +10,7 @@ from unet3d.training import load_old_model, train_model
 
 
 config = dict()
-config["image_shape"] = (512, 512, 360)  # This determines what shape the images will be cropped/resampled to.
+config["image_shape"] = (256, 256, 180)  # This determines what shape the images will be cropped/resampled to.
 config["patch_shape"] = (128, 128, 128)  # switch to None to train on the whole image
 config["labels"] = (0,1)  # the label numbers on the input image
 config["n_base_filters"] = 16
