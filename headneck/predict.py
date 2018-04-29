@@ -14,7 +14,7 @@ def main(args):
 
 		os.makedirs(prediction_dir)
 
-	if args.gpu.lower() == "gpu0" || args.gpu.lower() == "gpu1":
+	if args.gpu.lower() == "gpu0" or args.gpu.lower() == "gpu1":
 
 		run_validation_cases(validation_keys_file=config_isensee["validation_file"],
         	                 model_file=config_isensee["model_file"],
