@@ -33,7 +33,7 @@ def main(args):
 if __name__ == "__main__":
 
 	parser = argparse.ArgumentParser()
-	parser.add_argument("gpuu", help="enter gpu: gpu0 OR gpu1")
+	parser.add_argument("gpu", help="enter gpu: gpu0 OR gpu1")
 	args = parser.parse_args()
 
 	main(args)
