@@ -47,7 +47,7 @@ def main(args):
     plt.savefig(prediction_path+"validation_scores_boxplot.png")
     plt.close()
 
-    training_df = pd.read_csv("./headneck/isensee2017/training.log")
+    training_df = pd.read_csv("./headneck/isensee2017_gpu0/training.log")
 
     # fix logging epochs
     training_df['epoch'] = range(len(training_df.index))
