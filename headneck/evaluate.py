@@ -25,7 +25,7 @@ def main(args):
     header = ("Background", "Mandible")
     masking_functions = (get_background_mask, get_mandible_mask)
     rows = list()
-    prediction_path = "./headneck/prediction/"+args.mode.lower()+"/"
+    prediction_path = "./headneck/prediction/"+args.gpu.lower()+"/"
     for case_folder in glob.glob(prediction_path+"*/"):
         truth_file = os.path.join(case_folder, "truth.nii.gz")
         truth_image = nib.load(truth_file)
@@ -47,7 +47,7 @@ def main(args):
     plt.savefig(prediction_path+"validation_scores_boxplot.png")
     plt.close()
 
-    training_df = pd.read_csv("./headneck/isensee2017_gpu0/training.log")
+    training_df = pd.read_csv("./headneck/isensee2017_"+gpu+"/training.log")
 
     # fix logging epochs
     training_df['epoch'] = range(len(training_df.index))
@@ -65,7 +65,7 @@ def main(args):
 
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser()
-	parser.add_argument("mode", help="enter model mode: unet OR isensee2017")
+	parser.add_argument("gpu", help="enter gpu: gpu0 OR gpu1")
 	args = parser.parse_args()
 
 	main(args)
