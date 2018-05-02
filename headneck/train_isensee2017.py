@@ -48,7 +48,7 @@ config["model_file"] = os.path.abspath("./headneck/isensee2017_gpu0/isensee_2017
 config["training_file"] = os.path.abspath("./headneck/isensee2017_gpu0/isensee_training_ids.pkl")
 config["validation_file"] = os.path.abspath("./headneck/isensee2017_gpu0/isensee_validation_ids.pkl")
 config["overwrite"] = False  # If True, will previous files. If False, will use previously written files.
-config["logging_path"] = os.path.abspath("./headneck/isensee2017_gp0/training.log")
+config["logging_path"] = os.path.abspath("./headneck/isensee2017_gpu0/training.log")
 config["n_gpus"] = 1 # enter how many gpus you want to use
 
 
