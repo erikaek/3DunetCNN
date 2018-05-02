@@ -26,7 +26,7 @@ config["truth_channel"] = config["nb_channels"]
 config["deconvolution"] = True  # if False, will use upsampling instead of deconvolution
 
 config["batch_size"] = 2
-config["validation_batch_size"] = 1
+config["validation_batch_size"] = 2
 config["n_epochs"] = 3000  # cutoff the training after this many epochs
 config["patience"] = 100  # learning rate will be reduced after this many epochs if the validation loss is not improving
 config["early_stop"] = 200  # training will be stopped after this many epochs without the validation loss improving
@@ -35,27 +35,27 @@ config["learning_rate_drop"] = 0.5  # factor by which the learning rate will be 
 config["validation_split"] = 0.74  # portion of the data that will be used for training
 config["flip"] = False  # augments the data by randomly flipping an axis during
 config["permute"] = False  # data shape must be a cube. Augments the data by permuting in various directions
-config["distortion_factor"] = 0.05  # switch to None if you want no distortion, start with factor 0.1
-config["rotation_factor"] = None # switch to None if you want no distortion, start with factor 0.01
-config["mirror"] = False # True or False for random mirroring left right (x-direction)
+config["distortion_factor"] = 0.1  # switch to None if you want no distortion, start with factor 0.1
+config["rotation_factor"] = 0.01 # switch to None if you want no distortion, start with factor 0.01
+config["mirror"] = True # True or False for random mirroring left right (x-direction)
 config["augment"] = config["flip"] or config["distortion_factor"] or config["rotation_factor"] or config["mirror"]
 config["validation_patch_overlap"] = 0  # if > 0, during training, validation patches will be overlapping
 config["training_patch_start_offset"] = (16, 16, 16)  # randomly offset the first patch index by up to this offset
 config["skip_blank"] = True  # if True, then patches without any target will be skipped
 
-config["data_file"] = os.path.abspath("./headneck/isensee2017_gpu1/headneck_data.h5")
-config["model_file"] = os.path.abspath("./headneck/isensee2017_gpu1/isensee_2017_model.h5")
-config["training_file"] = os.path.abspath("./headneck/isensee2017_gpu1/isensee_training_ids.pkl")
-config["validation_file"] = os.path.abspath("./headneck/isensee2017_gpu1/isensee_validation_ids.pkl")
+config["data_file"] = os.path.abspath("./headneck/isensee2017_gpu0/headneck_data.h5")
+config["model_file"] = os.path.abspath("./headneck/isensee2017_gpu0/isensee_2017_model.h5")
+config["training_file"] = os.path.abspath("./headneck/isensee2017_gpu0/isensee_training_ids.pkl")
+config["validation_file"] = os.path.abspath("./headneck/isensee2017_gpu0/isensee_validation_ids.pkl")
 config["overwrite"] = False  # If True, will previous files. If False, will use previously written files.
-config["logging_path"] = os.path.abspath("./headneck/isensee2017_gpu1/training.log")
+config["logging_path"] = os.path.abspath("./headneck/isensee2017_gpu0/training.log")
 config["n_gpus"] = 1 # enter how many gpus you want to use
 
 
 def fetch_training_data_files(return_subject_ids=False):
     training_data_files = list()
     subject_ids = list()
-    for subject_dir in glob.glob(os.path.join(os.path.dirname(__file__), "data", "preprocessed_full", "*", "*")):
+    for subject_dir in glob.glob(os.path.join(os.path.dirname(__file__), "data", "preprocessed_downsampled", "*", "*")):
         subject_ids.append(os.path.basename(subject_dir))
         subject_files = list()
         for modality in config["training_modalities"] + ["truth"]:
