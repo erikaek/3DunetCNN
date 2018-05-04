@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 
 from train_isensee2017 import config
 from unet3d.prediction import run_validation_cases
+from unet3d.data import write_data_to_file
 from evaluate import get_background_mask, get_organ_mask, dice_coefficient
 
 config["data_file"] = os.path.abspath("./headneck/prediction_test/headneck_data.h5")
