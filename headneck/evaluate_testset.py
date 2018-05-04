@@ -7,7 +7,7 @@ import matplotlib
 matplotlib.use('agg')
 import matplotlib.pyplot as plt
 
-from .utils import pickle_dump, pickle_load
+from unet3d.utils import pickle_dump, pickle_load
 from train_isensee2017 import config
 from unet3d.prediction import run_validation_cases
 from unet3d.data import write_data_to_file
