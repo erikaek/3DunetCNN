@@ -13,7 +13,7 @@ def get_background_mask(data):
     return data == 0
 
 
-def get_mandible_mask(data):
+def get_organ_mask(data):
     return data == 1
 
 
@@ -23,7 +23,7 @@ def dice_coefficient(truth, prediction):
 
 def main(args):
     header = ("Background", "Mandible")
-    masking_functions = (get_background_mask, get_mandible_mask)
+    masking_functions = (get_background_mask, get_organ_mask)
     rows = list()
     prediction_path = "./headneck/prediction/"+args.gpu.lower()+"/"
     for case_folder in glob.glob(prediction_path+"*/"):
