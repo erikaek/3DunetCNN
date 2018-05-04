@@ -31,12 +31,14 @@ def fetch_test_data_files(return_subject_ids=False):
     else:
         return test_data_files
 
+training_files, subject_ids = fetch_test_data_files(return_subject_ids=True)
+
 if not os.path.exists(config["data_file"]):
-	training_files, subject_ids = fetch_test_data_files(return_subject_ids=True)
 
 	write_data_to_file(training_files, config["data_file"], image_shape=config["image_shape"], subject_ids=subject_ids)
 
 if not os.path.exists(config["test_file"]):
+
 	test_list = list(range(len(subject_ids)))
 	pickle_dump(test_list, config["test_file"])
 
