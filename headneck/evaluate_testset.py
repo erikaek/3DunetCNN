@@ -56,7 +56,7 @@ run_validation_cases(validation_keys_file=config["test_file"],
                	  	 output_label_map=True,
                   	 output_dir=prediction_dir)
 
-header = ("Background", "Mandible")
+header = ("Background", "Organ")
 masking_functions = (get_background_mask, get_organ_mask)
 rows = list()
 prediction_path = "./headneck/prediction_test/"

@@ -22,7 +22,7 @@ def dice_coefficient(truth, prediction):
 
 
 def main(args):
-    header = ("Background", "Mandible")
+    header = ("Background", "Organ")
     masking_functions = (get_background_mask, get_organ_mask)
     rows = list()
     prediction_path = "./headneck/prediction/"+args.gpu.lower()+"/"
