@@ -16,6 +16,8 @@ def get_background_mask(data):
     mask[data == 0] = 1
     mask[data == 1] = 0   
 
+    print(mask.dtype)
+
     return mask
 
 
