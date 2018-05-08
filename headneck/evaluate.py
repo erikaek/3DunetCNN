@@ -7,33 +7,18 @@ import pandas as pd
 import matplotlib
 matplotlib.use('agg')
 import matplotlib.pyplot as plt
-#from unet3d.metrics import dice_coefficient
-from keras import backend as K
 
 
 def get_background_mask(data):
-
-    mask = np.array(data,dtype=np.float16)
-    mask[data == 0] = 1
-    mask[data == 1] = 0   
-
-    return mask
+    return data == 0
 
 
 def get_organ_mask(data):
+    return data == 1
 
-    mask = np.array(data,dtype=np.float16)
 
-    return mask
-
-def dice_coefficient(y_true, y_pred, smooth=1.):
-    y_true_f = K.flatten(y_true)
-    y_pred_f = K.flatten(y_pred)
-    intersection = K.sum(y_true_f * y_pred_f)
-    return (2. * intersection + smooth) / (K.sum(y_true_f) + K.sum(y_pred_f) + smooth)
-
-#def dice_coefficient(truth, prediction):
-#    return 2 * np.sum(truth * prediction)/(np.sum(truth) + np.sum(prediction))
+def dice_coefficient(truth, prediction, smooth=1):
+    return ( 2 * np.sum(truth * prediction) + smooth)/( np.sum(truth) + np.sum(prediction) + smooth )
 
 
 def main(args):
@@ -48,9 +33,7 @@ def main(args):
         prediction_file = os.path.join(case_folder, "prediction.nii.gz")
         prediction_image = nib.load(prediction_file)
         prediction = prediction_image.get_data()
-        rows.append([dice_coefficient(func(truth), func(prediction)) for func in masking_functions])
-
-    print(rows)
+        rows.append([dice_coefficient(func(truth), func(prediction))for func in masking_functions])
     df = pd.DataFrame.from_records(rows, columns=header)
     df.to_csv(prediction_path+"headneck_scores.csv")
 
