@@ -22,8 +22,8 @@ def dice_coefficient(truth, prediction, smooth=1):
 
 
 def main(args):
-    header = ("Background", "Organ")
-    masking_functions = (get_background_mask, get_organ_mask)
+    header = ("Organ")
+    masking_functions = (get_organ_mask)
     rows = list()
     prediction_path = "./headneck/prediction/"+args.gpu.lower()+"/"
     for case_folder in glob.glob(prediction_path+"*/"):
