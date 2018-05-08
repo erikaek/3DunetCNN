@@ -12,7 +12,7 @@ from unet3d.metrics import dice_coefficient
 
 def get_background_mask(data):
 
-    mask = data.astype(np.uint8)
+    mask = np.array(data,dtype=np.uint8)
     mask[data == 0] = 1
     mask[data == 1] = 0   
 
@@ -21,7 +21,7 @@ def get_background_mask(data):
 
 def get_organ_mask(data):
 
-    mask = udata.astype(np.uint8)
+    mask = np.array(data,dtype=np.uint8)
 
     return mask
 
