@@ -49,6 +49,8 @@ def main(args):
         prediction_image = nib.load(prediction_file)
         prediction = prediction_image.get_data()
         rows.append([dice_coefficient(func(truth), func(prediction)) for func in masking_functions])
+
+    print(rows)
     df = pd.DataFrame.from_records(rows, columns=header)
     df.to_csv(prediction_path+"headneck_scores.csv")
 
