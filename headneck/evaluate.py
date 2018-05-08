@@ -26,7 +26,7 @@ def get_organ_mask(data):
 
     return mask
 
-def dice_coefficient(y_true, y_pred, smooth=0.00001):
+def dice_coefficient(y_true, y_pred, smooth=1.):
     y_true_f = K.flatten(y_true)
     y_pred_f = K.flatten(y_pred)
     intersection = K.sum(y_true_f * y_pred_f)
@@ -48,7 +48,7 @@ def main(args):
         prediction_file = os.path.join(case_folder, "prediction.nii.gz")
         prediction_image = nib.load(prediction_file)
         prediction = prediction_image.get_data()
-        rows.append([dice_coefficient(func(truth), func(prediction))for func in masking_functions])
+        rows.append([dice_coefficient(func(truth), func(prediction)) for func in masking_functions])
     df = pd.DataFrame.from_records(rows, columns=header)
     df.to_csv(prediction_path+"headneck_scores.csv")
 
