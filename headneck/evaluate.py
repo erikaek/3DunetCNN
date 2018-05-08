@@ -7,6 +7,7 @@ import pandas as pd
 import matplotlib
 matplotlib.use('agg')
 import matplotlib.pyplot as plt
+from unet3d.metrics import dice_coefficient
 
 
 def get_background_mask(data):
@@ -17,8 +18,8 @@ def get_organ_mask(data):
     return data == 1
 
 
-def dice_coefficient(truth, prediction):
-    return 2 * np.sum(truth * prediction)/(np.sum(truth) + np.sum(prediction))
+#def dice_coefficient(truth, prediction):
+#    return 2 * np.sum(truth * prediction)/(np.sum(truth) + np.sum(prediction))
 
 
 def main(args):
@@ -33,7 +34,7 @@ def main(args):
         prediction_file = os.path.join(case_folder, "prediction.nii.gz")
         prediction_image = nib.load(prediction_file)
         prediction = prediction_image.get_data()
-        rows.append([dice_coefficient(func(truth), func(prediction))for func in masking_functions])
+        rows.append([dice_coefficient(func(truth), func(prediction),0)for func in masking_functions])
     df = pd.DataFrame.from_records(rows, columns=header)
     df.to_csv(prediction_path+"headneck_scores.csv")
 
