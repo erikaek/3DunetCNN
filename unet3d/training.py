@@ -19,7 +19,7 @@ def get_callbacks(model_file, initial_learning_rate=0.0001, learning_rate_drop=0
                   learning_rate_patience=50, logging_path="./training.log", verbosity=1,
                   early_stopping_patience=None):
     callbacks = list()
-    callbacks.append(ModelCheckpoint(model_file, monitor='val_dice_coefficient', save_best_only=True, mode='max'))
+    callbacks.append(ModelCheckpoint(model_file, monitor='val_label_wise_dice_coefficient', save_best_only=True, mode='max'))
     callbacks.append(CSVLogger(logging_path, append=True))
     #callbacks.append(TensorBoard(log_dir=logging_path+"/logs", histogram_freq=0, batch_size=2, write_graph=False, write_grads=False,
     # write_images=True, embeddings_freq=0, embeddings_layer_names=None, embeddings_metadata=None))
