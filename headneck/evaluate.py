@@ -11,11 +11,16 @@ from unet3d.metrics import dice_coefficient
 
 
 def get_background_mask(data):
-    return data == 0
+
+    mask = data
+    mask[data == 0] = 1
+    mask[data == 1] = 0   
+
+    return mask
 
 
 def get_organ_mask(data):
-    return data == 1
+    return data
 
 
 #def dice_coefficient(truth, prediction):
