@@ -5,7 +5,7 @@ from keras.engine import Model
 from keras.optimizers import Adam
 
 from .unet import create_convolution_block, concatenate
-from ..metrics import weighted_dice_coefficient_loss, dice_coefficient
+from ..metrics import weighted_dice_coefficient_loss, dice_coefficient as dice
 from keras.utils import multi_gpu_model
 
 create_convolution_block = partial(create_convolution_block, activation=LeakyReLU, instance_normalization=True)
@@ -98,7 +98,7 @@ def isensee2017_model(input_shape=(4, 128, 128, 128), n_base_filters=16, depth=5
     if n_gpus>1:
         model = ModelMGPU(model, gpus=n_gpus)
 
-    model.compile(optimizer=optimizer(lr=initial_learning_rate), loss=loss_function, metrics=[dice_coefficient])
+    model.compile(optimizer=optimizer(lr=initial_learning_rate), loss=loss_function, metrics=[dice])
 
     return model
 
