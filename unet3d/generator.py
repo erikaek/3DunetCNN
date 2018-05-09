@@ -162,7 +162,7 @@ def data_generator(data_file, index_list, batch_size=1, n_labels=1, labels=None,
             cut_by = len(index_list)%n_gpus
             index_list = index_list[:-cut_by]
 
-        print(len(index_list)/batch_size)
+        print(len(index_list)/batch_size > 16)
         if len(index_list)/batch_size > 16:
             cut_by = 3
             index_list = index_list[:-cut_by]
