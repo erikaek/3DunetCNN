@@ -229,6 +229,8 @@ def add_data(x_list, y_list, data_file, index, augment=False, augment_flip=False
     """
     data, truth = get_data_from_file(data_file, index, patch_shape=patch_shape)
 
+    data = float16(data)
+
     print(data.dtype) 
 
     if augment:
