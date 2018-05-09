@@ -166,6 +166,8 @@ def data_generator(data_file, index_list, batch_size=1, n_labels=1, labels=None,
             cut_by = 5
             index_list = index_list[:-cut_by]
 
+        print(len(index_list))
+
         while len(index_list) > 0:
 
             index = index_list.pop()
