@@ -229,10 +229,6 @@ def add_data(x_list, y_list, data_file, index, augment=False, augment_flip=False
     """
     data, truth = get_data_from_file(data_file, index, patch_shape=patch_shape)
 
-    data=data.astype('float16')
-
-    print(data.dtype) 
-
     if augment:
         if patch_shape is not None:
             affine = data_file.root.affine[index[0]]
@@ -240,6 +236,7 @@ def add_data(x_list, y_list, data_file, index, augment=False, augment_flip=False
             affine = data_file.root.affine[index]
         data, truth = augment_data(data, truth, affine, flip=augment_flip, scale_deviation=augment_distortion_factor,
                                    rotation_deviation=augment_rotation_factor,mirror=mirror)
+        data = data.astype('float16')
 
     if permute:
         if data.shape[-3] != data.shape[-2] or data.shape[-2] != data.shape[-1]:
