@@ -17,13 +17,13 @@ def get_organ_mask(data):
     return data == 1
 
 
-def dice_coefficient(truth, prediction, smooth=1):
-    return ( 2 * np.sum(truth * prediction) + smooth)/( np.sum(truth) + np.sum(prediction) + smooth )
+def dice_coefficient(truth, prediction):
+    return 2 * np.sum(truth * prediction)/(np.sum(truth) + np.sum(prediction))
 
 
 def main(args):
-    header = ("Organ")
-    masking_functions = (get_organ_mask)
+    header = ("Background", "Organ")
+    masking_functions = (get_background_mask, get_organ_mask)
     rows = list()
     prediction_path = "./headneck/prediction/"+args.gpu.lower()+"/"
     for case_folder in glob.glob(prediction_path+"*/"):
@@ -33,7 +33,7 @@ def main(args):
         prediction_file = os.path.join(case_folder, "prediction.nii.gz")
         prediction_image = nib.load(prediction_file)
         prediction = prediction_image.get_data()
-        rows.append([dice_coefficient(func(truth), func(prediction))for func in masking_functions])
+        rows.append([dice_coefficient(func(truth), func(prediction)) for func in masking_functions])
     df = pd.DataFrame.from_records(rows, columns=header)
     df.to_csv(prediction_path+"headneck_scores.csv")
 
