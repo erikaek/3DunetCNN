@@ -10,8 +10,8 @@ from unet3d.training import load_old_model, train_model
 
 
 config = dict()
-config["image_shape"] = (128, 128, 128) #(256, 256, 180)  # This determines what shape the images will be cropped/resampled to.
-config["patch_shape"] = None #(128, 128, 128)  # switch to None to train on the whole image
+config["image_shape"] = (256, 256, 180)  # This determines what shape the images will be cropped/resampled to.
+config["patch_shape"] = (128, 128, 128) #(128, 128, 128)  # switch to None to train on the whole image
 config["labels"] = (0,1)  # the label numbers on the input image
 config["n_base_filters"] = 16
 config["n_labels"] = len(config["labels"])
@@ -32,7 +32,7 @@ config["patience"] = 100  # learning rate will be reduced after this many epochs
 config["early_stop"] = 200  # training will be stopped after this many epochs without the validation loss improving
 config["initial_learning_rate"] = 5e-4
 config["learning_rate_drop"] = 0.5  # factor by which the learning rate will be reduced
-config["validation_split"] = 0.78 #0.78 # portion of the data that will be used for training
+config["validation_split"] = 0.74 #0.78 # portion of the data that will be used for training
 config["flip"] = False  # augments the data by randomly flipping an axis during
 config["permute"] = False  # data shape must be a cube. Augments the data by permuting in various directions
 config["distortion_factor"] = None  # switch to None if you want no distortion, start with factor 0.1
@@ -55,7 +55,7 @@ config["n_gpus"] = 1 # enter how many gpus you want to use
 def fetch_training_data_files(return_subject_ids=False):
     training_data_files = list()
     subject_ids = list()
-    for subject_dir in glob.glob(os.path.join(os.path.dirname(__file__), "data", "preprocessed_brainstem", "*", "*")):
+    for subject_dir in glob.glob(os.path.join(os.path.dirname(__file__), "data", "preprocessed_mandible_downsampled", "*", "*")):
         subject_ids.append(os.path.basename(subject_dir))
         subject_files = list()
         for modality in config["training_modalities"] + ["truth"]:
