@@ -29,9 +29,9 @@ def get_callbacks(model_file, initial_learning_rate=0.0001, learning_rate_drop=0
                                                        drop=learning_rate_drop, epochs_drop=learning_rate_epochs)))
     else:
         callbacks.append(ReduceLROnPlateau(monitor='val_label_wise_dice_coefficient',factor=learning_rate_drop, patience=learning_rate_patience,
-                                           verbose=verbosity))
+                                           verbose=verbosity, mode='max'))
     if early_stopping_patience:
-        callbacks.append(EarlyStopping(monitor='val_label_wise_dice_coefficient', verbose=verbosity, patience=early_stopping_patience))
+        callbacks.append(EarlyStopping(monitor='val_label_wise_dice_coefficient', verbose=verbosity, patience=early_stopping_patience, mode='max'))
     return callbacks
 
 
