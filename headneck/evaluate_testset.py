@@ -16,7 +16,6 @@ from evaluate import get_background_mask, get_organ_mask, dice_coefficient
 config["data_file"] = os.path.abspath("./headneck/prediction_test/headneck_data.h5")
 config["test_file"] = os.path.abspath("./headneck/prediction_test/isensee_test_ids.pkl")
 config["model_file"] = os.path.abspath("./headneck/isensee2017_test/isensee_2017_model.h5")
-config["image_shape"] = (128,128,128)
 
 def fetch_test_data_files(return_subject_ids=False):
     test_data_files = list()
