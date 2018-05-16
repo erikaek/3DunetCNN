@@ -10,8 +10,8 @@ from unet3d.training import load_old_model, train_model
 
 
 config = dict()
-config["image_shape"] = (256, 256, 180)  # This determines what shape the images will be cropped/resampled to.
-config["patch_shape"] = (128, 128, 128)  # switch to None to train on the whole image
+config["image_shape"] = (128, 128, 128)  # This determines what shape the images will be cropped/resampled to.
+config["patch_shape"] = None #(128, 128, 128)  # switch to None to train on the whole image
 config["labels"] = (0,1)  # the label numbers on the input image
 config["n_base_filters"] = 16
 config["n_labels"] = len(config["labels"])
@@ -35,8 +35,8 @@ config["learning_rate_drop"] = 0.5  # factor by which the learning rate will be 
 config["validation_split"] = 0.78 #0.78 # portion of the data that will be used for training
 config["flip"] = False  # augments the data by randomly flipping an axis during
 config["permute"] = False  # data shape must be a cube. Augments the data by permuting in various directions
-config["distortion_factor"] = None  # switch to None if you want no distortion, start with factor 0.1
-config["rotation_factor"] = None # switch to None if you want no distortion, start with factor 0.01
+config["distortion_factor"] = False  # switch to None if you want no distortion, start with factor 0.1
+config["rotation_factor"] = False # switch to None if you want no distortion, start with factor 0.01
 config["mirror"] = False # True or False for random mirroring left right (x-direction)
 config["augment"] = config["flip"] or config["distortion_factor"] or config["rotation_factor"] or config["mirror"]
 config["validation_patch_overlap"] = 0  # if > 0, during training, validation patches will be overlapping
