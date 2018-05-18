@@ -31,7 +31,7 @@ def get_callbacks(model_file, initial_learning_rate=0.0001, learning_rate_drop=0
         callbacks.append(ReduceLROnPlateau(monitor='val_loss',factor=learning_rate_drop, patience=learning_rate_patience,
                                            verbose=verbosity, mode='min'))
     if early_stopping_patience:
-        callbacks.append(EarlyStopping(monitor='val_loss', verbose=verbosity, patience=early_stopping_patience, mode='max'))
+        callbacks.append(EarlyStopping(monitor='val_loss', verbose=verbosity, patience=early_stopping_patience, mode='min'))
     return callbacks
 
 
