@@ -35,20 +35,20 @@ config["learning_rate_drop"] = 0.5  # factor by which the learning rate will be 
 config["validation_split"] = 0.78 #0.78 # portion of the data that will be used for training
 config["flip"] = False  # augments the data by randomly flipping an axis during
 config["permute"] = False  # data shape must be a cube. Augments the data by permuting in various directions
-config["distortion_factor"] = 0.15  # switch to None if you want no distortion, start with factor 0.1
-config["rotation_factor"] = 0.015 # switch to None if you want no distortion, start with factor 0.01
+config["distortion_factor"] = None  # switch to None if you want no distortion, start with factor 0.1
+config["rotation_factor"] = None # switch to None if you want no distortion, start with factor 0.01
 config["mirror"] = True # True or False for random mirroring left right (x-direction)
 config["augment"] = config["flip"] or config["distortion_factor"] or config["rotation_factor"] or config["mirror"]
 config["validation_patch_overlap"] = 0  # if > 0, during training, validation patches will be overlapping
 config["training_patch_start_offset"] = (16, 16, 16)  # randomly offset the first patch index by up to this offset
 config["skip_blank"] = True  # if True, then patches without any target will be skipped
 
-config["data_file"] = os.path.abspath("./headneck/isensee2017_gpu0/headneck_data.h5")
-config["model_file"] = os.path.abspath("./headneck/isensee2017_gpu0/isensee_2017_model.h5")
-config["training_file"] = os.path.abspath("./headneck/isensee2017_gpu0/isensee_training_ids.pkl")
-config["validation_file"] = os.path.abspath("./headneck/isensee2017_gpu0/isensee_validation_ids.pkl")
+config["data_file"] = os.path.abspath("./headneck/isensee2017_gpu1/headneck_data.h5")
+config["model_file"] = os.path.abspath("./headneck/isensee2017_gpu1/isensee_2017_model.h5")
+config["training_file"] = os.path.abspath("./headneck/isensee2017_gpu1/isensee_training_ids.pkl")
+config["validation_file"] = os.path.abspath("./headneck/isensee2017_gpu1/isensee_validation_ids.pkl")
 config["overwrite"] = False  # If True, will previous files. If False, will use previously written files.
-config["logging_path"] = os.path.abspath("./headneck/isensee2017_gpu0/training.log")
+config["logging_path"] = os.path.abspath("./headneck/isensee2017_gpu1/training.log")
 config["n_gpus"] = 1 # enter how many gpus you want to use
 
 
