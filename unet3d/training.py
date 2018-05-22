@@ -19,7 +19,7 @@ def get_callbacks(model_file, initial_learning_rate=0.0001, learning_rate_drop=0
                   learning_rate_patience=50, logging_path="./training.log", verbosity=1,
                   early_stopping_patience=None):
     callbacks = list()
-    callbacks.append(ModelCheckpoint(model_file, monitor='val_label_wise_dice_coefficient', save_best_only=True, mode='max'))
+    callbacks.append(ModelCheckpoint(model_file, monitor='val_loss', save_best_only=True, mode='min'))
     callbacks.append(CSVLogger(logging_path, append=True))
     #callbacks.append(TensorBoard(log_dir=logging_path+"/logs", histogram_freq=0, batch_size=2, write_graph=False, write_grads=False,
     # write_images=True, embeddings_freq=0, embeddings_layer_names=None, embeddings_metadata=None))
@@ -28,10 +28,10 @@ def get_callbacks(model_file, initial_learning_rate=0.0001, learning_rate_drop=0
         callbacks.append(LearningRateScheduler(partial(step_decay, initial_lrate=initial_learning_rate,
                                                        drop=learning_rate_drop, epochs_drop=learning_rate_epochs)))
     else:
-        callbacks.append(ReduceLROnPlateau(monitor='val_label_wise_dice_coefficient',factor=learning_rate_drop, patience=learning_rate_patience,
-                                           verbose=verbosity, mode='max'))
+        callbacks.append(ReduceLROnPlateau(monitor='val_loss',factor=learning_rate_drop, patience=learning_rate_patience,
+                                           verbose=verbosity, mode='min'))
     if early_stopping_patience:
-        callbacks.append(EarlyStopping(monitor='val_label_wise_dice_coefficient', verbose=verbosity, patience=early_stopping_patience, mode='max'))
+        callbacks.append(EarlyStopping(monitor='val_loss', verbose=verbosity, patience=early_stopping_patience, mode='min'))
     return callbacks
 
 
