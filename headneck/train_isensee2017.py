@@ -30,13 +30,13 @@ config["validation_batch_size"] = 1
 config["n_epochs"] = 3000  # cutoff the training after this many epochs
 config["patience"] = 200  # learning rate will be reduced after this many epochs if the validation loss is not improving
 config["early_stop"] = 100  # training will be stopped after this many epochs without the validation loss improving
-config["initial_learning_rate"] = 1e-4
+config["initial_learning_rate"] = 5e-5
 config["learning_rate_drop"] = 0.5  # factor by which the learning rate will be reduced
-config["validation_split"] = 0.74 #0.78 # portion of the data that will be used for training
+config["validation_split"] = 0.78 #0.78 # portion of the data that will be used for training
 config["flip"] = False  # augments the data by randomly flipping an axis during
 config["permute"] = False  # data shape must be a cube. Augments the data by permuting in various directions
-config["distortion_factor"] = None  # switch to None if you want no distortion, start with factor 0.1
-config["rotation_factor"] = None # switch to None if you want no distortion, start with factor 0.01
+config["distortion_factor"] = 0.05  # switch to None if you want no distortion, start with factor 0.1
+config["rotation_factor"] = 0.005 # switch to None if you want no distortion, start with factor 0.01
 config["mirror"] = True # True or False for random mirroring left right (x-direction)
 config["augment"] = config["flip"] or config["distortion_factor"] or config["rotation_factor"] or config["mirror"]
 config["validation_patch_overlap"] = 0  # if > 0, during training, validation patches will be overlapping
@@ -55,7 +55,7 @@ config["n_gpus"] = 1 # enter how many gpus you want to use
 def fetch_training_data_files(return_subject_ids=False):
     training_data_files = list()
     subject_ids = list()
-    for subject_dir in glob.glob(os.path.join(os.path.dirname(__file__), "data", "preprocessed_mandible", "*", "*")):
+    for subject_dir in glob.glob(os.path.join(os.path.dirname(__file__), "data", "preprocessed_parotid", "*", "*")):
         subject_ids.append(os.path.basename(subject_dir))
         subject_files = list()
         for modality in config["training_modalities"] + ["truth"]:
