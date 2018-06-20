@@ -35,8 +35,8 @@ config["learning_rate_drop"] = 0.5  # factor by which the learning rate will be 
 config["validation_split"] = 0.78 #0.78 # portion of the data that will be used for training
 config["flip"] = False  # augments the data by randomly flipping an axis during
 config["permute"] = False  # data shape must be a cube. Augments the data by permuting in various directions
-config["distortion_factor"] = 0.2  # switch to None if you want no distortion, start with factor 0.1
-config["rotation_factor"] = 0.02 # switch to None if you want no distortion, start with factor 0.01
+config["distortion_factor"] = 0.1  # switch to None if you want no distortion, start with factor 0.1
+config["rotation_factor"] = 0.01 # switch to None if you want no distortion, start with factor 0.01
 config["mirror"] = True # True or False for random mirroring left right (x-direction)
 config["augment"] = config["flip"] or config["distortion_factor"] or config["rotation_factor"] or config["mirror"]
 config["validation_patch_overlap"] = 0  # if > 0, during training, validation patches will be overlapping
@@ -49,7 +49,6 @@ config["training_file"] = os.path.abspath("./headneck/isensee2017/isensee_traini
 config["validation_file"] = os.path.abspath("./headneck/isensee2017/isensee_validation_ids.pkl")
 config["overwrite"] = False  # If True, will previous files. If False, will use previously written files.
 config["logging_path"] = os.path.abspath("./headneck/isensee2017/training.log")
-config["n_gpus"] = 1 # enter how many gpus you want to use
 
 
 def fetch_training_data_files(return_subject_ids=False):
@@ -103,8 +102,7 @@ def main(overwrite=False):
         augment_flip=config["flip"],
         augment_distortion_factor=config["distortion_factor"],
         augment_rotation_factor=config["rotation_factor"],
-        mirror=config["mirror"],
-        n_gpus=config["n_gpus"])
+        mirror=config["mirror"])
 
     # run training
     train_model(model=model,

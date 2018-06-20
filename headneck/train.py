@@ -25,25 +25,27 @@ config["deconvolution"] = True  # if False, will use upsampling instead of decon
 
 config["batch_size"] = 6
 config["validation_batch_size"] = 1
-config["n_epochs"] = 500  # cutoff the training after this many epochs
-config["patience"] = 10  # learning rate will be reduced after this many epochs if the validation loss is not improving
-config["early_stop"] = 50  # training will be stopped after this many epochs without the validation loss improving
+config["n_epochs"] = 3000  # cutoff the training after this many epochs
+config["patience"] = 200  # learning rate will be reduced after this many epochs if the validation loss is not improving
+config["early_stop"] = 100  # training will be stopped after this many epochs without the validation loss improving
 config["initial_learning_rate"] = 0.00001
 config["learning_rate_drop"] = 0.5  # factor by which the learning rate will be reduced
-config["validation_split"] = 0.8  # portion of the data that will be used for training
+config["validation_split"] = 0.78  # portion of the data that will be used for training
 config["flip"] = False  # augments the data by randomly flipping an axis during
-config["permute"] = True  # data shape must be a cube. Augments the data by permuting in various directions
-config["distort"] = None  # switch to None if you want no distortion
-config["augment"] = config["flip"] or config["distort"]
+config["distortion_factor"] = 0.1  # switch to None if you want no distortion, start with factor 0.1
+config["rotation_factor"] = 0.01 # switch to None if you want no distortion, start with factor 0.01
+config["mirror"] = True # True or False for random mirroring left right (x-direction)
+config["augment"] = config["flip"] or config["distortion_factor"] or config["rotation_factor"] or config["mirror"]
 config["validation_patch_overlap"] = 0  # if > 0, during training, validation patches will be overlapping
 config["training_patch_start_offset"] = (16, 16, 16)  # randomly offset the first patch index by up to this offset
 config["skip_blank"] = True  # if True, then patches without any target will be skipped
+
 config["data_file"] = os.path.abspath("./headneck/unet/brats_data.h5")
 config["model_file"] = os.path.abspath("./headneck/unet/tumor_segmentation_model.h5")
 config["training_file"] = os.path.abspath("./headneck/unet/training_ids.pkl")
 config["validation_file"] = os.path.abspath("./headneck/unet/validation_ids.pkl")
 config["overwrite"] = False  # If True, will previous files. If False, will use previously written files.
-config["logging_path"] = os.path.abspath("./headneck/unet")
+config["logging_path"] = os.path.abspath("./headneck/unet/training.log")
 
 def fetch_training_data_files():
     training_data_files = list()
@@ -91,7 +93,9 @@ def main(overwrite=False):
         augment=config["augment"],
         skip_blank=config["skip_blank"],
         augment_flip=config["flip"],
-        augment_distortion_factor=config["distort"])
+        augment_distortion_factor=config["distortion_factor"],
+        augment_rotation_factor=config["rotation_factor"],
+        mirror=config["mirror"])
 
     # run training
     train_model(model=model,
