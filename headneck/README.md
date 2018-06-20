@@ -58,3 +58,8 @@ You can also remove outlier points in the final prediction through a postprocess
 	python headneck/postprecess.py
 
 Here, you can change the prediction_path-parameter according to if you want to consider the validation or the test set. Default is the validation set. This script also calculates the dice values, 95th percentile- and maximum Hausdorff distance and the contour mean distance for each data set.
+
+## Citations
+
+MICCAI Data Citation:
+	* Raudaschl, P. F., Zaffino, P., Sharp, G. C., Spadea, M. F., Chen, A., Dawant, B. M., ... & Jung, F. (2017). Evaluation of segmentation methods on head and neck CT: Auto‐segmentation challenge 2015. Medical Physics, 44(5), 2020-2036. 
