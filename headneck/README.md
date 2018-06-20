@@ -62,4 +62,4 @@ Here, you can change the prediction_path-parameter according to if you want to c
 ## Citations
 
 MICCAI Data Citation:
-	* Raudaschl, P. F., Zaffino, P., Sharp, G. C., Spadea, M. F., Chen, A., Dawant, B. M., ... & Jung, F. (2017). Evaluation of segmentation methods on head and neck CT: Auto‐segmentation challenge 2015. Medical Physics, 44(5), 2020-2036. 
+ * Raudaschl, P. F., Zaffino, P., Sharp, G. C., Spadea, M. F., Chen, A., Dawant, B. M., ... & Jung, F. (2017). Evaluation of segmentation methods on head and neck CT: Auto‐segmentation challenge 2015. Medical Physics, 44(5), 2020-2036.
