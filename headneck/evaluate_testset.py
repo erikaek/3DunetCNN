@@ -15,12 +15,12 @@ from evaluate import get_background_mask, get_organ_mask, dice_coefficient
 
 config["data_file"] = os.path.abspath("./headneck/prediction_test/headneck_data.h5")
 config["test_file"] = os.path.abspath("./headneck/prediction_test/isensee_test_ids.pkl")
-config["model_file"] = os.path.abspath("./headneck/isensee2017_test/isensee_2017_model.h5")
+config["model_file"] = os.path.abspath("./headneck/isensee2017/isensee_2017_model.h5")
 
 def fetch_test_data_files(return_subject_ids=False):
     test_data_files = list()
     subject_ids = list()
-    for subject_dir in glob.glob(os.path.join(os.path.dirname(__file__), "data", "preprocessed_mandible_test", "*", "*")):
+    for subject_dir in glob.glob(os.path.join(os.path.dirname(__file__), "data", "preprocessed_test", "*", "*")):
         subject_ids.append(os.path.basename(subject_dir))
         subject_files = list()
         for modality in config["training_modalities"] + ["truth"]:

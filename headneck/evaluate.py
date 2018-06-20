@@ -7,6 +7,9 @@ import pandas as pd
 import matplotlib
 matplotlib.use('agg')
 import matplotlib.pyplot as plt
+import numpy as np
+from scipy.ndimage import morphology
+import scipy.io
 
 
 def get_background_mask(data):
@@ -25,7 +28,9 @@ def main(args):
     header = ("Background", "Organ")
     masking_functions = (get_background_mask, get_organ_mask)
     rows = list()
-    prediction_path = "./headneck/prediction/"+args.gpu.lower()+"/"
+
+    prediction_path = "./headneck/prediction/"
+
     for case_folder in glob.glob(prediction_path+"*/"):
         truth_file = os.path.join(case_folder, "truth.nii.gz")
         truth_image = nib.load(truth_file)
@@ -34,8 +39,10 @@ def main(args):
         prediction_image = nib.load(prediction_file)
         prediction = prediction_image.get_data()
         rows.append([dice_coefficient(func(truth), func(prediction)) for func in masking_functions])
+
     df = pd.DataFrame.from_records(rows, columns=header)
     df.to_csv(prediction_path+"headneck_scores.csv")
+
 
     scores = dict()
     for index, score in enumerate(df.columns):
@@ -47,7 +54,7 @@ def main(args):
     plt.savefig(prediction_path+"validation_scores_boxplot.png")
     plt.close()
 
-    training_df = pd.read_csv("./headneck/isensee2017_"+args.gpu.lower()+"/training.log")
+    training_df = pd.read_csv("./headneck/isensee2017/training.log")
 
     # fix logging epochs
     training_df['epoch'] = range(len(training_df.index))
@@ -64,8 +71,5 @@ def main(args):
 
 
 if __name__ == "__main__":
-	parser = argparse.ArgumentParser()
-	parser.add_argument("gpu", help="enter gpu: gpu0 OR gpu1")
-	args = parser.parse_args()
 
-	main(args)
+	main()

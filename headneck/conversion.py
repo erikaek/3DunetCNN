@@ -40,32 +40,28 @@ def alter_header(nrrdheader,img):
 
     return img
 
-counter = 0
-weight_factor = 0
 
-for readpath in glob.glob(os.path.join("../../Data", "*","*")):
+data_path = "../../Data"
+organ = "Mandible"
+
+for readpath in glob.glob(os.path.join(data_path, "*","*")):
 
     subject = os.path.basename(readpath)
 
-    savepath = os.path.join('data/original/', os.path.basename(os.path.dirname(readpath)),
+    savepath = os.path.join("data","original", os.path.basename(os.path.dirname(readpath)),
                                               subject)
-    organfile = os.path.join(readpath,"structures","Mandible.nrrd")
+    organfile = os.path.join(readpath,"structures",organ+".nrrd")
 
-    if os.path.exists(organfile):
+    if os.path.exists(organfile_R) and os.path.exists(organfile_L):
 
         if not os.path.exists(savepath):
             os.makedirs(savepath)
    
         ct_data, info_ct = nrrd.read(readpath+'/img.nrrd')
-        label_data, info_label = nrrd.read(organfile)
+        label_data, info_label = nrrd.read(organfile_R)
 
-        ct_data = downsample(ct_data,2)
-        label_data = downsample(label_data,2)
-
-        ct_data = pad_zdim(ct_data,180,0)
-        label_data = pad_zdim(label_data,180,0)
-
-        weight_factor += np.sum(label_data)/np.sum(np.ones(ct_data.shape,dtype=ct_data.dtype))
+        ct_data = pad_zdim(ct_data,360,0)
+        label_data = pad_zdim(label_data,360,0)
 
         affine = create_affine(info_ct,2)
 
@@ -78,7 +74,3 @@ for readpath in glob.glob(os.path.join("../../Data", "*","*")):
         nib.save(ct_img, savepath+'/ct.nii.gz')
         nib.save(label_img, savepath + '/truth.nii.gz')
 
-        counter += 1
-
-weight_factor = weight_factor/counter
-print("mean weight factor: "+str(weight_factor))

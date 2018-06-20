@@ -1,3 +1,3 @@
-from preprocess import convert_brats_data
+from preprocess import convert_data
 
-convert_brats_data("data/original", "data/preprocessed")
+convert_data("data/original_submandibular", "data/preprocessed_submandibular")
