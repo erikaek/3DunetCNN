@@ -60,7 +60,7 @@ def main(args):
   masking_functions = (get_background_mask, get_organ_mask)
   rows = list()
 
-  prediction_path = "./headneck/prediction_test/"+args.organ.lower()
+  prediction_path = "./headneck/prediction_test/"+args.organ.lower()+"/"
 
   for case_folder in glob.glob(prediction_path+"*/"):
     truth_file = os.path.join(case_folder, "truth.nii.gz")
