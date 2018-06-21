@@ -33,19 +33,19 @@ You can also use the original 3D U-net implementation in train.py. The main diff
 
 To predict the segmentation of the validation data set use:
 
-	python headneck/predict.py
+	python headneck/predict.py organ
 
-This script saves the prediction of the validations sets along with the original image set and segmentation in a prediction folder. To derive loss plots and boxplots over the obtained dice values use:
+where organ is the name of the organ you what to segment. This script saves the prediction of the validations sets along with the original image set and segmentation in a prediction folder. To derive loss plots and boxplots over the obtained dice values use:
 
-	python headneck/evaluate.py
+	python headneck/evaluate.py organ
 
-which saves corresponding png-images in the same prediction folder.
+where organ again is the name of the organ you what to segment. This script saves corresponding png-images in the same prediction folder.
 
 To instead predict and evaluate a test set you can use:
 
-	python headneck/evaluate_testset.py
+	python headneck/evaluate_testset.py organ
 
-Reformat and preprocess the test data as described above with the only difference in the folder name of the preprocessed data. Use instead:
+where organ once again is the name of the organ you what to segment. Reformat and preprocess the test data as described above with the only difference in the folder name of the preprocessed data. Use instead:
 
 	convert_data("data/original, "data/preprocessed_test")
 
@@ -58,6 +58,14 @@ You can also remove outlier points in the final prediction through a postprocess
 	python headneck/postprecess.py
 
 Here, you can change the prediction_path-parameter according to if you want to consider the validation or the test set. Default is the validation set. This script also calculates the dice values, 95th percentile- and maximum Hausdorff distance and the contour mean distance for each data set.
+
+## Convert to Tissue Matrix
+
+One final step is to combine the organs you've segmented into a tissue matrix suitable for constructing a vox model. This can be done using:
+
+	python prediction_to_TM.py
+
+In this script you can specify the prediction directory to be used (default is validation prediction). It will construct tissue matrices according to the tissue indices of the Duke model and save them in a separate folder called tissue_matrices. These can thereafter be used to create raw files which are used as input for the vox-files imported in CST.
 
 ## Citations
 
