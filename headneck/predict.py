@@ -8,7 +8,7 @@ from unet3d.prediction import run_validation_cases
 
 def main(args):
 
-	prediction_dir = os.path.abspath("./headneck/prediction")
+	prediction_dir = os.path.abspath("./headneck/prediction/"+args.organ.lower())
 
 	if not os.path.exists(prediction_dir):
 
@@ -27,5 +27,8 @@ def main(args):
 
 if __name__ == "__main__":
 
-	main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("organ", help="enter segmented organ")
+    args = parser.parse_args()
+    main(args)
     	

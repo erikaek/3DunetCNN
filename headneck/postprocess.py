@@ -3,11 +3,6 @@ import nibabel as nib
 import os
 import argparse
 import glob
-import pandas as pd
-import matplotlib
-matplotlib.use('agg')
-import matplotlib.pyplot as plt
-import numpy as np
 from scipy import ndimage
 from scipy.ndimage import morphology
 import scipy.io

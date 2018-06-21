@@ -31,36 +31,37 @@ def fetch_test_data_files(return_subject_ids=False):
     else:
         return test_data_files
 
-training_files, subject_ids = fetch_test_data_files(return_subject_ids=True)
+def main(args):
 
-if not os.path.exists(config["data_file"]):
+  training_files, subject_ids = fetch_test_data_files(return_subject_ids=True)
 
-	write_data_to_file(training_files, config["data_file"], image_shape=config["image_shape"], subject_ids=subject_ids)
+  if not os.path.exists(config["data_file"]):
+    write_data_to_file(training_files, config["data_file"], image_shape=config["image_shape"], subject_ids=subject_ids)
 
-if not os.path.exists(config["test_file"]):
+  if not os.path.exists(config["test_file"]):
+    test_list = list(range(len(subject_ids)))
+    pickle_dump(test_list, config["test_file"])
 
-	test_list = list(range(len(subject_ids)))
-	pickle_dump(test_list, config["test_file"])
+  prediction_dir = os.path.abspath("./headneck/prediction_test/"+args.organ.lower())
 
+  if not os.path.exists(prediction_dir):
+    os.makedirs(prediction_dir)
 
-prediction_dir = os.path.abspath("./headneck/prediction_test")
+  run_validation_cases(validation_keys_file=config["test_file"],
+     	                 model_file=config["model_file"],
+         	             training_modalities=config["training_modalities"],
+             	         labels=config["labels"],
+                 	     hdf5_file=config["data_file"],
+                 	  	 output_label_map=True,
+                    	 output_dir=prediction_dir)
 
-if not os.path.exists(prediction_dir):
-	os.makedirs(prediction_dir)
+  header = ("Background", "Organ")
+  masking_functions = (get_background_mask, get_organ_mask)
+  rows = list()
 
-run_validation_cases(validation_keys_file=config["test_file"],
-   	                 model_file=config["model_file"],
-       	             training_modalities=config["training_modalities"],
-           	         labels=config["labels"],
-               	     hdf5_file=config["data_file"],
-               	  	 output_label_map=True,
-                  	 output_dir=prediction_dir)
+  prediction_path = "./headneck/prediction_test/"
 
-header = ("Background", "Organ")
-masking_functions = (get_background_mask, get_organ_mask)
-rows = list()
-prediction_path = "./headneck/prediction_test/"
-for case_folder in glob.glob(prediction_path+"*/"):
+  for case_folder in glob.glob(prediction_path+"*/"):
     truth_file = os.path.join(case_folder, "truth.nii.gz")
     truth_image = nib.load(truth_file)
     truth = truth_image.get_data()
@@ -68,15 +69,24 @@ for case_folder in glob.glob(prediction_path+"*/"):
     prediction_image = nib.load(prediction_file)
     prediction = prediction_image.get_data()
     rows.append([dice_coefficient(func(truth), func(prediction))for func in masking_functions])
-df = pd.DataFrame.from_records(rows, columns=header)
-df.to_csv(prediction_path+"headneck_scores.csv")
 
-scores = dict()
-for index, score in enumerate(df.columns):
+  df = pd.DataFrame.from_records(rows, columns=header)
+  df.to_csv(prediction_path+"headneck_scores.csv")
+
+  scores = dict()
+  for index, score in enumerate(df.columns):
     values = df.values.T[index]
     scores[score] = values[np.isnan(values) == False]
 
-plt.boxplot(list(scores.values()), labels=list(scores.keys()))
-plt.ylabel("Dice Coefficient")
-plt.savefig(prediction_path+"test_scores_boxplot.png")
-plt.close()
+  plt.boxplot(list(scores.values()), labels=list(scores.keys()))
+  plt.ylabel("Dice Coefficient")
+  plt.savefig(prediction_path+"test_scores_boxplot.png")
+  plt.close()
+
+
+if __name__ == "__main__":
+
+  parser = argparse.ArgumentParser()
+  parser.add_argument("organ", help="enter segmented organ")
+  args = parser.parse_args()
+  main(args)

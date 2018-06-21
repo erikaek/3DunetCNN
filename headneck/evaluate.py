@@ -29,7 +29,7 @@ def main(args):
     masking_functions = (get_background_mask, get_organ_mask)
     rows = list()
 
-    prediction_path = "./headneck/prediction/"
+    prediction_path = "./headneck/prediction/"+args.organ.lower()+"/"
 
     for case_folder in glob.glob(prediction_path+"*/"):
         truth_file = os.path.join(case_folder, "truth.nii.gz")
@@ -71,5 +71,7 @@ def main(args):
 
 
 if __name__ == "__main__":
-
-	main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("organ", help="enter segmented organ")
+    args = parser.parse_args()
+    main(args)
