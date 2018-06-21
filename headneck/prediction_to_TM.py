@@ -12,11 +12,6 @@ from train_isensee2017 import config as config_isensee
 
 def material_index():
 
-	index_dict = {"Brainstem":62, "Mandible":42, "Parotid":71}
-	index_dict = {k.lower():v for k,v in index_dict.items()}
-	return index_dict
-
-	"""
 	index_dict = {"Air_exterior": 1, "Air_internal" : 2, "BloodA": 3, "Blood_vessels": 5, "Bones": 6, "Gray Matter": 7, "White matter": 8, "Cartilage" : 11, "Cerebellum" : 12,
 				  "CSF" : 13, "Commissura_anterior" : 14, "Commissura_posterior" : 15, "Connective_tissue" : 16, "Cornea" : 17, "Ear_cartilage" : 19, "Ear_skin" : 20,
 				  "Esophagus" : 22, "Eye_lens" : 23, "Air_esophagus" : 24, "Eye_Sclera" : 25, "Eye_vitreous_humor" : 26, "Fat": 27, "Hippocampus" : 31, "Hypophysis" : 32,
@@ -24,8 +19,10 @@ def material_index():
 				  "Mucosa" : 47, "Muscle" : 48, "Nerve" : 49, "Pharynx" : 53, "Pinealbody" : 54, "Pons" : 55, "SAT" : 57, "Skin" : 58, "Skull" : 59, "Spinal cord" : 62, 
 				  "Teeth" : 66, "Tendon_Ligament" : 67, "Thalamus" : 69, "Thyroid_gland" : 71, "Tongue" : 72, "Trachea" : 73, "Air_trachea"  : 74, "Vein" : 76, "Vertebrae" : 77,
 				  "Tumor" : 80, "Water (debye-15C)" : 81}
-	"""
-
+				  
+	index_dict = {"Brainstem":62, "Mandible":42, "Parotid":71}
+	index_dict = {k.lower():v for k,v in index_dict.items()}
+	return index_dict
 
 def main():
 
