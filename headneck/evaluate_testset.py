@@ -34,19 +34,19 @@ def fetch_test_data_files(return_subject_ids=False):
 
 def main(args):
 
-  training_files, subject_ids = fetch_test_data_files(return_subject_ids=True)
-
-  if not os.path.exists(config["data_file"]):
-    write_data_to_file(training_files, config["data_file"], image_shape=config["image_shape"], subject_ids=subject_ids)
-
-  if not os.path.exists(config["test_file"]):
-    test_list = list(range(len(subject_ids)))
-    pickle_dump(test_list, config["test_file"])
-
   prediction_dir = os.path.abspath("./headneck/prediction_test/"+args.organ.lower())
 
   if not os.path.exists(prediction_dir):
     os.makedirs(prediction_dir)
+
+  test_data_files, subject_ids = fetch_test_data_files(return_subject_ids=True)
+
+  if not os.path.exists(config["data_file"]):
+    write_data_to_file(test_data_files, config["data_file"], image_shape=config["image_shape"], subject_ids=subject_ids)
+
+  if not os.path.exists(config["test_file"]):
+    test_list = list(range(len(subject_ids)))
+    pickle_dump(test_list, config["test_file"])
 
   run_validation_cases(validation_keys_file=config["test_file"],
      	                 model_file=config["model_file"],
